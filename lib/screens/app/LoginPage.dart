@@ -2,16 +2,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:greenland_stock/constants.dart';
 import 'package:greenland_stock/db/user.dart' as user;
-import 'package:greenland_stock/screens/app/ContactAndSupportWidget.dart';
-import 'package:greenland_stock/screens/app/MobileSigninPage.dart';
 import 'package:greenland_stock/screens/app/PhoneAuthVerify.dart';
 import 'package:greenland_stock/screens/home/HomeScreen.dart';
-import 'package:greenland_stock/screens/utils/CustomColors.dart';
 import 'package:greenland_stock/screens/utils/CustomDialogs.dart';
 import 'package:greenland_stock/screens/utils/CustomSnackBar.dart';
-import 'package:greenland_stock/screens/utils/url_launcher_utils.dart';
 import 'package:greenland_stock/services/auth_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -26,7 +21,7 @@ class _LoginPageState extends State<LoginPage> {
   final GlobalKey<State> _keyLoader = new GlobalKey<State>();
 
   GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-  TextEditingController _nController = TextEditingController();
+  TextEditingController _number = TextEditingController();
   AuthService _authController = AuthService();
 
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
@@ -38,6 +33,8 @@ class _LoginPageState extends State<LoginPage> {
   String _smsVerificationCode;
   int _forceResendingToken;
 
+  bool _validate = false;
+
   @override
   void initState() {
     super.initState();
@@ -47,296 +44,174 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      backgroundColor: CustomColors.lightGrey,
-      bottomNavigationBar: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            "From ",
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: CustomColors.black,
-            ),
-          ),
-          InkWell(
-            onTap: () {
-              UrlLauncherUtils.launchURL('https://www.fourcup.com');
-            },
-            child: Text(
-              " Fourcup Inc.",
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: CustomColors.blue,
-              ),
-            ),
-          ),
-        ],
-      ),
-      extendBody: true,
-      body: SingleChildScrollView(
-        child: Container(
-          padding:
-              EdgeInsets.only(top: MediaQuery.of(context).padding.top + 10),
-          height: MediaQuery.of(context).size.height,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [CustomColors.green, CustomColors.lightGrey],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-            ),
-          ),
-          child: _getBody(),
-        ),
-      ),
-    );
-  }
-
-  Widget _getBody() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        ClipRRect(
-          child: Image.asset(
-            "images/logo.png",
-            height: 80,
-          ),
-        ),
-        Column(
-          children: [
-            Text(
-              "FC Mart",
-              style: TextStyle(
-                  color: Colors.black,
-                  fontFamily: "OLED",
-                  fontSize: 32.0,
-                  fontWeight: FontWeight.bold),
-            ),
-            Text(
-              "Shop Everything Online",
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 12.0,
-              ),
-            ),
-          ],
-        ),
-        SizedBox(
-          height: 20,
-        ),
-        Text(
-          "WELCOME BACK !!",
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 16.0,
-          ),
-        ),
-        Padding(
-          padding:
-              EdgeInsets.only(top: 10, bottom: 15.0, left: 20.0, right: 20.0),
-          child: TextFormField(
-            textAlign: TextAlign.start,
-            controller: _nController,
-            autofocus: false,
-            keyboardType: TextInputType.number,
-            inputFormatters: [
-              FilteringTextInputFormatter.digitsOnly,
-              LengthLimitingTextInputFormatter(10)
-            ],
-            decoration: InputDecoration(
-              prefix: Text('+91'),
-              prefixIcon: Icon(
-                Icons.phone,
-                color: CustomColors.grey,
-                size: 25.0,
-              ),
-              prefixIconConstraints: BoxConstraints(
-                minWidth: 60,
-              ),
-              hintText: "Mobile Number",
-              fillColor: CustomColors.white,
-              filled: true,
-              contentPadding: EdgeInsets.all(14),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(15),
-                borderSide: BorderSide(
-                  width: 0,
-                  style: BorderStyle.none,
-                ),
-              ),
-            ),
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.only(left: 10.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              SizedBox(width: 5),
-              Icon(
-                Icons.info_outline,
-                color: CustomColors.alertRed,
-                size: 20.0,
-              ),
-              SizedBox(width: 5.0),
-              Flexible(
-                child: RichText(
-                  text: TextSpan(
-                    children: [
-                      TextSpan(
-                        text: "We will send",
-                        style: TextStyle(
-                            color: CustomColors.blue,
-                            fontWeight: FontWeight.w400),
-                      ),
-                      TextSpan(
-                        text: " OTP",
-                        style: TextStyle(
-                            color: CustomColors.alertRed,
-                            fontSize: 16.0,
-                            fontWeight: FontWeight.w700),
-                      ),
-                      TextSpan(
-                        text: " to this Mobile Number",
-                        style: TextStyle(
-                            color: CustomColors.blue,
-                            fontWeight: FontWeight.w400),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-        SizedBox(
-          height: 20,
-        ),
-        InkWell(
+      appBar: AppBar(
+        backgroundColor: Colors.green,
+        title: Text("GreenLand Stock"),
+        leading: InkWell(
+          child: Icon(Icons.arrow_back_ios),
           onTap: () {
-            UrlLauncherUtils.launchURL(terms_and_conditions_url);
+            Navigator.pop(context);
           },
-          child: Text(
-            "On Registering, You accept our Terms of Services",
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Colors.black,
-              decoration: TextDecoration.underline,
-            ),
-          ),
         ),
-        SizedBox(height: 10),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            SizedBox(
-              height: 40,
-              width: 150,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  primary: CustomColors.alertRed,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(20),
-                      bottomLeft: Radius.circular(5),
+      ),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          child: SizedBox(
+            width: double.infinity,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 40),
+              child: Column(
+                children: [
+                  Text(
+                    "Login",
+                    style: TextStyle(
+                        color: Colors.green,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 25),
+                  ),
+                  Padding(
+                    padding:
+                        const EdgeInsets.only(top: 18, right: 25, left: 25),
+                    child: Divider(
+                      height: 1,
+                      color: Colors.black45,
                     ),
                   ),
-                ),
-                onPressed: () {
-                  _submit();
-                },
-                child: Text(
-                  "Get OTP",
-                  style: TextStyle(
-                    fontSize: 18.0,
-                    color: CustomColors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-        TextButton.icon(
-          onPressed: () {
-            showDialog(
-              context: context,
-              routeSettings: RouteSettings(name: "/home/help"),
-              builder: (context) {
-                return Center(
-                  child: contactAndSupportDialog(context),
-                );
-              },
-            );
-          },
-          icon: Container(
-            padding: EdgeInsets.all(3),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: CustomColors.black),
-            ),
-            child: Icon(
-              Icons.headset_mic,
-              size: 13,
-              color: CustomColors.blue,
-            ),
-          ),
-          label: Text(
-            "Help & Support",
-            style: TextStyle(
-              color: CustomColors.blue,
-              fontSize: 14.0,
-            ),
-          ),
-        ),
-        Container(
-          alignment: Alignment.topLeft,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: <Widget>[
-              Padding(
-                padding: EdgeInsets.all(5.0),
-                child: Text(
-                  "Don't have an account?",
-                  style: TextStyle(
-                    fontSize: 14.0,
-                    color: CustomColors.black,
-                  ),
-                ),
-              ),
-              InkWell(
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (BuildContext context) => MobileSignInPage(),
-                      settings: RouteSettings(name: '/signup'),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 20),
+                    child: Text(
+                      "Login with Mobile OTP",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: Colors.black38),
                     ),
-                  );
-                },
-                child: Text(
-                  "SIGN UP",
-                  style: TextStyle(
-                    color: CustomColors.black,
-                    fontSize: 22.0,
                   ),
-                ),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      left: 20,
+                      right: 20,
+                    ),
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.10,
+                        ),
+                        Container(
+                          margin: const EdgeInsets.only(top: 8, bottom: 8),
+                          child: TextFormField(
+                            controller: _number,
+                            decoration: InputDecoration(
+                                errorText: _validate
+                                    ? 'Please enter the Mobile Number'
+                                    : null,
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.all(
+                                      Radius.circular(12.0)),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: const BorderSide(
+                                      color: Colors.grey, width: 2.0),
+                                ),
+                                labelText: 'Mobile Number',
+                                hintText: 'Enter registered Mobile Number'),
+                          ),
+                        ),
+                        SizedBox(height: 20),
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(28),
+                          child: ButtonTheme(
+                            minWidth: 200.0,
+                            height: 57.0,
+                            child: RaisedButton(
+                              child: Text('Get OTP'),
+                              color: Colors.green,
+                              textColor: Colors.white,
+                              onPressed: () {
+                                setState(() {
+                                  _number.text.isEmpty
+                                      ? _validate = true
+                                      : _validate = false;
+                                });
+
+                                if (_validate == false) {
+                                  _submit();
+                                }
+                              },
+                            ),
+                          ),
+                        ),
+                        Container(
+                            margin: EdgeInsets.only(top: 20, bottom: 10),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: new Container(
+                                      margin: const EdgeInsets.only(
+                                          left: 35.0, right: 10.0),
+                                      child: Divider(
+                                        color: Colors.black54,
+                                        height: 36,
+                                      )),
+                                ),
+                                Text(
+                                  "OR",
+                                ),
+                                Expanded(
+                                  child: new Container(
+                                      margin: const EdgeInsets.only(
+                                          left: 10.0, right: 35.0),
+                                      child: Divider(
+                                        color: Colors.black54,
+                                        height: 36,
+                                      )),
+                                ),
+                                //Text(
+                                //'(or)',
+                                //style: styles.ThemeText.defaultBtnTextBlack,
+                                //)
+                              ],
+                            )),
+                        InkWell(
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 15),
+                            child: const Text.rich(
+                              TextSpan(
+                                text: 'Don\'t have an account? ',
+                                children: [
+                                  TextSpan(
+                                      text: 'Register!',
+                                      style: TextStyle(
+                                        color: Colors.green,
+                                      )),
+                                ],
+                              ),
+                            ),
+                          ),
+                          onTap: () {
+                            Navigator.pushNamed(context, '/register');
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
         ),
-      ],
+      ),
     );
   }
 
   void _submit() async {
-    if (_nController.text.length != 10) {
+    if (_number.text.length != 10) {
       ScaffoldMessenger.of(context).showSnackBar(
           CustomSnackBar.errorSnackBar("Enter valid Mobile Number", 2));
       return;
     } else {
       CustomDialogs.showLoadingDialog(context, _keyLoader);
 
-      number = _nController.text;
+      number = _number.text;
       try {
         Map<String, dynamic> _uJSON =
             await user.User().getByID(countryCode.toString() + number);

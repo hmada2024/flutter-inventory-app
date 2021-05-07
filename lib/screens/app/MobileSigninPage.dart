@@ -1,17 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:greenland_stock/constants.dart';
 import 'package:greenland_stock/db/user.dart' as user;
 import 'package:flutter/services.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:greenland_stock/screens/app/ContactAndSupportWidget.dart';
 import 'package:greenland_stock/screens/app/PhoneAuthVerify.dart';
-import 'package:greenland_stock/screens/home/HomeScreen.dart';
-import 'package:greenland_stock/screens/utils/CustomColors.dart';
 import 'package:greenland_stock/screens/utils/CustomDialogs.dart';
 import 'package:greenland_stock/screens/utils/CustomSnackBar.dart';
-import 'package:greenland_stock/screens/utils/url_launcher_utils.dart';
 import 'package:greenland_stock/services/auth_service.dart';
 import 'package:greenland_stock/services/user_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -35,6 +29,10 @@ class _MobileSignInPageState extends State<MobileSignInPage> {
 
   int _forceResendingToken;
 
+  bool _validate = false;
+  bool _validate2 = false;
+  bool _validate3 = false;
+
   @override
   void initState() {
     super.initState();
@@ -47,384 +45,234 @@ class _MobileSignInPageState extends State<MobileSignInPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      bottomNavigationBar: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            "From ",
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: CustomColors.black,
-            ),
-          ),
-          InkWell(
-            onTap: () {
-              UrlLauncherUtils.launchURL('https://www.fourcup.com');
-            },
-            child: Text(
-              " Fourcup Inc.",
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: CustomColors.blue,
-              ),
-            ),
-          ),
-        ],
+      appBar: AppBar(
+        backgroundColor: Colors.green,
+        title: Text("GreenLand Stock"),
+        leading: InkWell(
+          child: Icon(Icons.arrow_back_ios),
+          onTap: () {
+            Navigator.pop(context);
+          },
+        ),
       ),
-      extendBody: true,
       body: SingleChildScrollView(
-        child: Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [CustomColors.green, CustomColors.lightGrey],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
+        child: SafeArea(
+          child: SingleChildScrollView(
+            scrollDirection: Axis.vertical,
+            child: SizedBox(
+              width: double.infinity,
+              child: Padding(
+                padding: const EdgeInsets.only(top: 40),
+                child: Column(
+                  children: [
+                    Text(
+                      "REGISTR HERE!!",
+                      style: TextStyle(
+                          color: Colors.green,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 25),
+                    ),
+                    Padding(
+                      padding:
+                          const EdgeInsets.only(top: 18, right: 25, left: 25),
+                      child: Divider(
+                        height: 1,
+                        color: Colors.black45,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 20),
+                      child: Text(
+                        "Get started with your name",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: Colors.black38),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        left: 20,
+                        right: 20,
+                      ),
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.08,
+                          ),
+                          Container(
+                            margin: const EdgeInsets.only(top: 5, bottom: 5),
+                            child: TextFormField(
+                              controller: _nameController,
+                              decoration: InputDecoration(
+                                  errorText: _validate
+                                      ? 'Please enter the name'
+                                      : null,
+                                  border: OutlineInputBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(12.0)),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide: const BorderSide(
+                                        color: Colors.grey, width: 2.0),
+                                  ),
+                                  labelText: 'Name',
+                                  hintText: 'Enter your name'),
+                            ),
+                          ),
+                          Container(
+                            margin: const EdgeInsets.only(top: 5, bottom: 5),
+                            child: TextFormField(
+                              controller: _phoneNumberController,
+                              decoration: InputDecoration(
+                                  errorText: _validate2
+                                      ? 'Please enter the phone number'
+                                      : null,
+                                  border: OutlineInputBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(12.0)),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide: const BorderSide(
+                                        color: Colors.grey, width: 2.0),
+                                  ),
+                                  labelText: 'Phone Number',
+                                  hintText: 'Enter your phone number'),
+                            ),
+                          ),
+                          Container(
+                            margin: const EdgeInsets.only(top: 5, bottom: 5),
+                            child: TextFormField(
+                              // keyboardType: TextInputType.visiblePassword,
+                              textInputAction: TextInputAction.send,
+                              autocorrect: true,
+                              obscureText: _passwordVisible,
+                              controller: _passKeyController,
+                              decoration: InputDecoration(
+                                  suffixIcon: GestureDetector(
+                                      onTap: _viewpass,
+                                      child: _passwordVisible
+                                          ? Icon(Icons.visibility_sharp,
+                                              color: Colors.grey)
+                                          : Icon(Icons.visibility_off_rounded,
+                                              color: Colors.grey)),
+                                  errorText: _validate3
+                                      ? 'Please enter the password'
+                                      : null,
+                                  border: OutlineInputBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(12.0)),
+                                    borderSide: BorderSide(
+                                        color: Colors.blue[200], width: 2),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide: const BorderSide(
+                                        color: Colors.grey, width: 2.0),
+                                  ),
+                                  labelText: 'Password',
+                                  hintText: 'Enter a strong password'),
+                            ),
+                          ),
+                          SizedBox(height: 20),
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(28),
+                            child: ButtonTheme(
+                              minWidth: 200.0,
+                              height: 57.0,
+                              child: RaisedButton(
+                                child: Text('Continue'),
+                                color: Colors.green,
+                                textColor: Colors.white,
+                                onPressed: () {
+                                  setState(() {
+                                    _passKeyController.text.isEmpty
+                                        ? _validate3 = true
+                                        : _validate3 = false;
+                                    _nameController.text.isEmpty
+                                        ? _validate = true
+                                        : _validate = false;
+                                    _phoneNumberController.text.isEmpty
+                                        ? _validate2 = true
+                                        : _validate2 = false;
+                                  });
+
+                                  if (_validate == false &&
+                                      _validate2 == false &&
+                                      _validate3 == false) {
+                                    startPhoneAuth();
+                                  }
+                                },
+                              ),
+                            ),
+                          ),
+                          Container(
+                              margin: EdgeInsets.only(top: 20, bottom: 10),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: new Container(
+                                        margin: const EdgeInsets.only(
+                                            left: 35.0, right: 10.0),
+                                        child: Divider(
+                                          color: Colors.black54,
+                                          height: 36,
+                                        )),
+                                  ),
+                                  Text(
+                                    "OR",
+                                  ),
+                                  Expanded(
+                                    child: new Container(
+                                        margin: const EdgeInsets.only(
+                                            left: 10.0, right: 35.0),
+                                        child: Divider(
+                                          color: Colors.black54,
+                                          height: 36,
+                                        )),
+                                  ),
+                                  //Text(
+                                  //'(or)',
+                                  //style: styles.ThemeText.defaultBtnTextBlack,
+                                  //)
+                                ],
+                              )),
+                          GestureDetector(
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 15),
+                              child: const Text.rich(
+                                TextSpan(
+                                  text: 'Already have an account? ',
+                                  children: [
+                                    TextSpan(
+                                        text: 'Sign in.',
+                                        style: TextStyle(
+                                          color: Colors.green,
+                                        )),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            onTap: () {
+                              Navigator.pushNamed(context, '/login');
+                            },
+                          ),
+                          SizedBox(height: 20)
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
-            height: MediaQuery.of(context).size.height,
-            padding:
-                EdgeInsets.only(top: MediaQuery.of(context).padding.top + 10),
-            child: SingleChildScrollView(child: _getColumnBody())),
+          ),
+        ),
       ),
     );
   }
 
-  Widget _getColumnBody() => Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          ClipRRect(
-            child: Image.asset(
-              "images/logo.png",
-              height: 80,
-            ),
-          ),
-          Column(
-            children: [
-              Text(
-                "FC Mart",
-                style: TextStyle(
-                    color: Colors.black,
-                    fontFamily: "OLED",
-                    fontSize: 32.0,
-                    fontWeight: FontWeight.bold),
-              ),
-              Text(
-                "Shop Everything Online",
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 12.0,
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 10),
-          Text(
-            "REGISTER HERE !!",
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 18.0,
-            ),
-          ),
-          Column(
-            children: [
-              Padding(
-                padding: EdgeInsets.only(
-                    bottom: 5.0, top: 10, left: 20.0, right: 20.0),
-                child: TextField(
-                  controller: _phoneNumberController,
-                  textAlign: TextAlign.left,
-                  keyboardType: TextInputType.number,
-                  inputFormatters: [
-                    LengthLimitingTextInputFormatter(10),
-                  ],
-                  decoration: InputDecoration(
-                    prefix: Text('+91'),
-                    prefixIcon: Icon(
-                      Icons.phone,
-                      color: CustomColors.grey,
-                      size: 25.0,
-                    ),
-                    prefixIconConstraints: BoxConstraints(
-                      minWidth: 60,
-                    ),
-                    fillColor: CustomColors.white,
-                    hintText: "Mobile Number",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15),
-                      borderSide: BorderSide(
-                        width: 0,
-                        style: BorderStyle.none,
-                      ),
-                    ),
-                    filled: true,
-                    contentPadding: EdgeInsets.all(14),
-                  ),
-                ),
-              ),
-              SizedBox(height: 5),
-              Row(
-                children: [
-                  Container(
-                    child: Flexible(
-                      child: Padding(
-                        padding:
-                            EdgeInsets.only(left: 20, right: 5.0, bottom: 5),
-                        child: TextField(
-                          controller: _nameController,
-                          textAlign: TextAlign.left,
-                          keyboardType: TextInputType.text,
-                          textCapitalization: TextCapitalization.words,
-                          decoration: InputDecoration(
-                            fillColor: CustomColors.white,
-                            prefixIcon: Icon(
-                              Icons.person_outline,
-                              color: CustomColors.grey,
-                              size: 25.0,
-                            ),
-                            hintText: "First Name",
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15),
-                              borderSide: BorderSide(
-                                width: 0,
-                                style: BorderStyle.none,
-                              ),
-                            ),
-                            filled: true,
-                            contentPadding: EdgeInsets.all(14),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    child: Flexible(
-                      child: Padding(
-                        padding:
-                            EdgeInsets.only(right: 20, left: 5.0, bottom: 5),
-                        child: TextField(
-                          controller: _lastNameController,
-                          textAlign: TextAlign.left,
-                          keyboardType: TextInputType.text,
-                          textCapitalization: TextCapitalization.words,
-                          decoration: InputDecoration(
-                            fillColor: CustomColors.white,
-                            hintText: "Last Name",
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15),
-                              borderSide: BorderSide(
-                                width: 0,
-                                style: BorderStyle.none,
-                              ),
-                            ),
-                            filled: true,
-                            contentPadding: EdgeInsets.all(14),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 5),
-              Container(
-                child: Padding(
-                  padding:
-                      EdgeInsets.only(bottom: 5.0, left: 20.0, right: 20.0),
-                  child: TextField(
-                    textAlign: TextAlign.left,
-                    keyboardType: TextInputType.text,
-                    controller: _passKeyController,
-                    obscureText: _passwordVisible,
-                    maxLengthEnforcement: MaxLengthEnforcement.enforced,
-                    decoration: InputDecoration(
-                      prefixIcon: Icon(
-                        FontAwesomeIcons.key,
-                        size: 20.0,
-                        color: CustomColors.grey,
-                      ),
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          _passwordVisible
-                              ? Icons.visibility_off
-                              : Icons.visibility,
-                          color: CustomColors.grey,
-                          size: 25.0,
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            _passwordVisible = !_passwordVisible;
-                          });
-                        },
-                      ),
-                      prefixIconConstraints: BoxConstraints(
-                        minWidth: 60,
-                      ),
-                      fillColor: CustomColors.white,
-                      hintText: "Password",
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        borderSide: BorderSide(
-                          width: 0,
-                          style: BorderStyle.none,
-                        ),
-                      ),
-                      filled: true,
-                      contentPadding: EdgeInsets.all(14),
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(height: 10),
-            ],
-          ),
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Icon(Icons.info_outline,
-                  color: CustomColors.alertRed, size: 20.0),
-              SizedBox(width: 10.0),
-              Flexible(
-                child: RichText(
-                  text: TextSpan(
-                    children: [
-                      TextSpan(
-                          text: "We will send",
-                          style: TextStyle(
-                              color: CustomColors.blue,
-                              fontWeight: FontWeight.w400)),
-                      TextSpan(
-                          text: " OTP",
-                          style: TextStyle(
-                              color: CustomColors.alertRed,
-                              fontSize: 16.0,
-                              fontWeight: FontWeight.w700)),
-                      TextSpan(
-                          text: " to this Mobile Number",
-                          style: TextStyle(
-                              color: CustomColors.blue,
-                              fontWeight: FontWeight.w400)),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 20),
-          InkWell(
-            onTap: () {
-              UrlLauncherUtils.launchURL(terms_and_conditions_url);
-            },
-            child: Text(
-              "On Registering, You accept our Terms of Services",
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.black,
-                decoration: TextDecoration.underline,
-              ),
-            ),
-          ),
-          SizedBox(height: 10),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              SizedBox(
-                height: 40,
-                width: 200,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    elevation: 10.0,
-                    primary: CustomColors.alertRed,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(20),
-                        bottomLeft: Radius.circular(5),
-                      ),
-                    ),
-                  ),
-                  onPressed: startPhoneAuth,
-                  child: Padding(
-                    padding: EdgeInsets.all(5.0),
-                    child: Text(
-                      "Register",
-                      style: TextStyle(
-                        color: CustomColors.white,
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          TextButton.icon(
-            onPressed: () {
-              showDialog(
-                context: context,
-                routeSettings: RouteSettings(name: "/home/help"),
-                builder: (context) {
-                  return Center(
-                    child: contactAndSupportDialog(context),
-                  );
-                },
-              );
-            },
-            icon: Container(
-              padding: EdgeInsets.all(3),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: CustomColors.black),
-              ),
-              child: Icon(
-                Icons.headset_mic,
-                size: 13,
-                color: CustomColors.blue,
-              ),
-            ),
-            label: Text(
-              "Help & Support",
-              style: TextStyle(
-                color: CustomColors.blue,
-                fontSize: 14.0,
-              ),
-            ),
-          ),
-          Container(
-            alignment: Alignment.topLeft,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Padding(
-                  padding: EdgeInsets.only(left: 5.0),
-                  child: Text(
-                    "Already have an account?",
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: CustomColors.black,
-                    ),
-                  ),
-                ),
-                InkWell(
-                  onTap: () => Navigator.pop(context),
-                  child: Text(
-                    "LOGIN",
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      fontSize: 22,
-                      color: CustomColors.black,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          SizedBox(
-            height: 20,
-          )
-        ],
-      );
+  void _viewpass() {
+    setState(() {
+      _passwordVisible = !_passwordVisible;
+    });
+  }
 
   startPhoneAuth() async {
     if (_phoneNumberController.text.length != 10) {
@@ -494,10 +342,8 @@ class _MobileSignInPageState extends State<MobileSignInPage> {
             cachedLocalUser.firstName + " " + cachedLocalUser.lastName ?? "");
         prefs.setString("mobile_number", cachedLocalUser.getID());
 
-        Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(
-            builder: (BuildContext context) => HomeScreen(0)
-          ),
+        Navigator.of(context).pushNamedAndRemoveUntil(
+          '/home',
           (Route<dynamic> route) => false,
         );
       }

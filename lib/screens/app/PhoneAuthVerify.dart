@@ -9,21 +9,13 @@ import 'package:greenland_stock/screens/home/HomeScreen.dart';
 import 'package:greenland_stock/screens/utils/CustomColors.dart';
 import 'package:greenland_stock/screens/utils/CustomDialogs.dart';
 import 'package:greenland_stock/screens/utils/CustomSnackBar.dart';
-import 'package:greenland_stock/screens/utils/url_launcher_utils.dart';
 import 'package:greenland_stock/services/auth_service.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PhoneAuthVerify extends StatefulWidget {
-  PhoneAuthVerify(
-      this.isRegister,
-      this.number,
-      this.countryCode,
-      this.passKey,
-      this.name,
-      this.lastName,
-      this.verificationID,
-      this.forceResendingToken,
+  PhoneAuthVerify(this.isRegister, this.number, this.countryCode, this.passKey,
+      this.name, this.lastName, this.verificationID, this.forceResendingToken,
       {this.confirmResult});
 
   final bool isRegister;
@@ -95,111 +87,55 @@ class _PhoneAuthVerifyState extends State<PhoneAuthVerify> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      bottomNavigationBar: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            "From ",
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: CustomColors.black,
+      appBar: AppBar(
+        backgroundColor: Colors.green,
+        title: Text("GreenLand Stock"),
+        leading: InkWell(
+          child: Icon(Icons.arrow_back_ios),
+          onTap: () {
+            Navigator.pop(context);
+          },
+        ),
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.05,
             ),
-          ),
-          InkWell(
-            onTap: () {
-              UrlLauncherUtils.launchURL('https://www.fourcup.com');
-            },
-            child: Text(
-              " Fourcup Inc.",
+            Text(
+              "OTP Verification",
               textAlign: TextAlign.center,
               style: TextStyle(
-                color: CustomColors.blue,
+                  color: Colors.green,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 25),
+            ),
+            _getPinFields(),
+            SizedBox(
+              height: 10,
+            ),
+            Container(
+              color: Colors.green,
+              margin:
+                  const EdgeInsets.symmetric(vertical: 16.0, horizontal: 30),
+              child: ButtonTheme(
+                minWidth: 100.0,
+                height: 40.0,
+                child: TextButton(
+                  onPressed: signIn,
+                  child: Center(
+                      child: Text(
+                    "Verify",
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold),
+                  )),
+                ),
               ),
             ),
-          ),
-        ],
-      ),
-      extendBody: true,
-      body: Container(
-        height: double.infinity,
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [CustomColors.green, CustomColors.lightGrey],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-          ),
-        ),
-        child: Center(
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                ClipRRect(
-                  child: Image.asset(
-                    "images/logo.png",
-                    height: 80,
-                  ),
-                ),
-                Column(
-                  children: [
-                    Text(
-                      "FC Mart",
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontFamily: "OLED",
-                          fontSize: 32.0,
-                          fontWeight: FontWeight.bold),
-                    ),
-                    Text(
-                      "Shop Everything Online",
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 12.0,
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                _getPinFields(),
-                SizedBox(
-                  height: 10,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    SizedBox(
-                      height: 40,
-                      width: 150,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          elevation: 16.0,
-                          primary: CustomColors.alertRed,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(20),
-                              bottomLeft: Radius.circular(5),
-                            ),
-                          ),
-                        ),
-                        onPressed: signIn,
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            "VERIFY",
-                            style: TextStyle(
-                              color: CustomColors.white,
-                              fontSize: 18.0,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                )
-              ],
-            ),
-          ),
+          ],
         ),
       ),
     );
@@ -225,6 +161,9 @@ class _PhoneAuthVerifyState extends State<PhoneAuthVerify> {
               ),
               textAlign: TextAlign.center,
             ),
+          ),
+          SizedBox(
+            height: MediaQuery.of(context).size.height * 0.10,
           ),
           SizedBox(
             height: 10,
@@ -283,7 +222,7 @@ class _PhoneAuthVerifyState extends State<PhoneAuthVerify> {
                             text: TextSpan(
                               children: [
                                 TextSpan(
-                                  text: "I didn't receive the code, ",
+                                  text: "Didn't receive the code?, ",
                                   style: TextStyle(
                                       color: CustomColors.black,
                                       fontWeight: FontWeight.w400),
@@ -335,7 +274,8 @@ class _PhoneAuthVerifyState extends State<PhoneAuthVerify> {
         .then((UserCredential authResult) async {
       final SharedPreferences prefs = await _prefs;
 
-      var result = await _authController.signInWithMobileNumber(widget.countryCode.toString() + widget.number);
+      var result = await _authController.signInWithMobileNumber(
+          widget.countryCode.toString() + widget.number);
 
       if (!result['is_success']) {
         Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
@@ -346,14 +286,12 @@ class _PhoneAuthVerifyState extends State<PhoneAuthVerify> {
           CustomSnackBar.errorSnackBar(result['message'], 2),
         );
       } else {
-        prefs.setString("user_name",
-            widget.name + " " + widget.lastName ?? "");
-        prefs.setString("mobile_number", widget.countryCode.toString() + widget.number);
+        prefs.setString("user_name", widget.name + " " + widget.lastName ?? "");
+        prefs.setString(
+            "mobile_number", widget.countryCode.toString() + widget.number);
 
         Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(
-            builder: (BuildContext context) => HomeScreen(0)
-          ),
+          MaterialPageRoute(builder: (BuildContext context) => HomeScreen(0)),
           (Route<dynamic> route) => false,
         );
       }
@@ -449,14 +387,12 @@ class _PhoneAuthVerifyState extends State<PhoneAuthVerify> {
   _success() async {
     final SharedPreferences prefs = await _prefs;
 
-    prefs.setString("user_name",
-            widget.name + " " + widget.lastName ?? "");
-        prefs.setString("mobile_number", widget.countryCode.toString() + widget.number);
+    prefs.setString("user_name", widget.name + " " + widget.lastName ?? "");
+    prefs.setString(
+        "mobile_number", widget.countryCode.toString() + widget.number);
 
     Navigator.of(context).pushAndRemoveUntil(
-      MaterialPageRoute(
-        builder: (BuildContext context) => HomeScreen(0)
-      ),
+      MaterialPageRoute(builder: (BuildContext context) => HomeScreen(0)),
       (Route<dynamic> route) => false,
     );
   }

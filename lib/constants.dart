@@ -7,3 +7,7 @@ const support_mobile_numer = "917550251906";
 const chipchop_website = "https://chipchop.in/";
 const chipchop_faq_url = "https://www.chipchop.in/help/faq/";
 const terms_and_conditions_url = "https://www.chipchop.in/terms-conditions/";
+
+
+const String homeRoute = '/';
+const String feedRoute = '/feed';
