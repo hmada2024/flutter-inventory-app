@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:greenland_stock/constants.dart';
 
 class OnboardScreen extends StatefulWidget {
   @override
@@ -140,7 +141,7 @@ class _OnboardScreenState extends State<OnboardScreen> {
               )
             : InkWell(
                 onTap: () {
-                  Navigator.pushNamed(context, '/login');
+                  Navigator.pushNamed(context, loginRoute);
                 },
                 child: Container(
                   height: Platform.isIOS ? 90 : 80,

@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:greenland_stock/screens/home/HomeScreen.dart';
+import 'package:greenland_stock/constants.dart';
 import 'package:greenland_stock/screens/utils/CustomColors.dart';
 import 'package:greenland_stock/screens/utils/CustomDialogs.dart';
 import 'package:greenland_stock/screens/utils/CustomSnackBar.dart';
@@ -290,8 +290,8 @@ class _PhoneAuthVerifyState extends State<PhoneAuthVerify> {
         prefs.setString(
             "mobile_number", widget.countryCode.toString() + widget.number);
 
-        Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (BuildContext context) => HomeScreen(0)),
+        Navigator.of(context).pushNamedAndRemoveUntil(
+          homeRoute,
           (Route<dynamic> route) => false,
         );
       }
@@ -391,8 +391,8 @@ class _PhoneAuthVerifyState extends State<PhoneAuthVerify> {
     prefs.setString(
         "mobile_number", widget.countryCode.toString() + widget.number);
 
-    Navigator.of(context).pushAndRemoveUntil(
-      MaterialPageRoute(builder: (BuildContext context) => HomeScreen(0)),
+    Navigator.of(context).pushNamedAndRemoveUntil(
+      homeRoute,
       (Route<dynamic> route) => false,
     );
   }

@@ -2,9 +2,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:greenland_stock/constants.dart';
 import 'package:greenland_stock/db/user.dart' as user;
 import 'package:greenland_stock/screens/app/PhoneAuthVerify.dart';
-import 'package:greenland_stock/screens/home/HomeScreen.dart';
 import 'package:greenland_stock/screens/utils/CustomDialogs.dart';
 import 'package:greenland_stock/screens/utils/CustomSnackBar.dart';
 import 'package:greenland_stock/services/auth_service.dart';
@@ -105,8 +105,8 @@ class _LoginPageState extends State<LoginPage> {
                                     ? 'Please enter the Mobile Number'
                                     : null,
                                 border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.all(
-                                      Radius.circular(12.0)),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(12.0)),
                                 ),
                                 focusedBorder: OutlineInputBorder(
                                   borderSide: const BorderSide(
@@ -188,7 +188,7 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                           ),
                           onTap: () {
-                            Navigator.pushNamed(context, '/register');
+                            Navigator.pushNamed(context, registerRoute);
                           },
                         ),
                       ],
@@ -300,8 +300,8 @@ class _LoginPageState extends State<LoginPage> {
         prefs.setString("user_name", _user.getFullName());
         prefs.setString("mobile_number", _user.getID());
 
-        Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (BuildContext context) => HomeScreen(0)),
+        Navigator.of(context).pushNamedAndRemoveUntil(
+          homeRoute,
           (Route<dynamic> route) => false,
         );
       }

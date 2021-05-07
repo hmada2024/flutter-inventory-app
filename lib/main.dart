@@ -10,7 +10,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:splashscreen/splashscreen.dart';
 
 Future<void> main() async {
-  var initialRoute = "/onboard-screen";
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
 
@@ -21,12 +20,6 @@ Future<void> main() async {
   String userID = prefs.getString('mobile_number') ?? "";
   String userName = prefs.getString('user_name') ?? "";
   String userImage = prefs.getString('user_profile_pic') ?? "";
-
-  if (isOpened && userID.isNotEmpty) {
-    initialRoute = '/home_screen';
-  } else {
-    initialRoute = "/onboard-screen";
-  }
 
   runApp(MaterialApp(
       theme: ThemeData(primarySwatch: Colors.green),
@@ -70,7 +63,6 @@ class MyApp extends StatelessWidget {
           : (userID.isNotEmpty)
               ? AuthPage(userID, userName, userImage)
               : LoginPage(),
-      // initialRoute: initialRoute,
       onGenerateRoute: r.Router.generateRoute,
     );
   }

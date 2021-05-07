@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:greenland_stock/constants.dart';
 import 'package:greenland_stock/db/user.dart' as user;
 import 'package:flutter/services.dart';
 import 'package:greenland_stock/screens/app/PhoneAuthVerify.dart';
@@ -251,7 +252,7 @@ class _MobileSignInPageState extends State<MobileSignInPage> {
                               ),
                             ),
                             onTap: () {
-                              Navigator.pushNamed(context, '/login');
+                              Navigator.pushNamed(context, loginRoute);
                             },
                           ),
                           SizedBox(height: 20)
@@ -343,7 +344,7 @@ class _MobileSignInPageState extends State<MobileSignInPage> {
         prefs.setString("mobile_number", cachedLocalUser.getID());
 
         Navigator.of(context).pushNamedAndRemoveUntil(
-          '/home',
+          homeRoute,
           (Route<dynamic> route) => false,
         );
       }

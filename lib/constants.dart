@@ -9,5 +9,8 @@ const chipchop_faq_url = "https://www.chipchop.in/help/faq/";
 const terms_and_conditions_url = "https://www.chipchop.in/terms-conditions/";
 
 
-const String homeRoute = '/';
-const String feedRoute = '/feed';
+const String onboardRoute = '/onboard';
+const String authRoute = '/auth';
+const String loginRoute = '/login';
+const String registerRoute = '/register';
+const String homeRoute = '/home';

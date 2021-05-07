@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:greenland_stock/constants.dart';
 import 'package:greenland_stock/db/user.dart';
 import 'package:greenland_stock/screens/utils/CustomDialogs.dart';
 import 'package:greenland_stock/screens/utils/CustomSnackBar.dart';
@@ -236,7 +237,7 @@ class _AuthPageState extends State<AuthPage> {
                             ),
                           ),
                           onTap: () {
-                            Navigator.pushNamed(context, '/register-screen');
+                            Navigator.pushNamed(context, registerRoute);
                           },
                         ),
                         SizedBox(height: 20)
