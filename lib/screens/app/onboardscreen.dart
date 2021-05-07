@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:greenland_stock/constants.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class OnboardScreen extends StatefulWidget {
   @override
@@ -140,7 +141,10 @@ class _OnboardScreenState extends State<OnboardScreen> {
                 ),
               )
             : InkWell(
-                onTap: () {
+                onTap: () async {
+                  SharedPreferences prefs = await SharedPreferences.getInstance();
+                  prefs.setBool('opened', true);
+                  
                   Navigator.pushNamed(context, loginRoute);
                 },
                 child: Container(
