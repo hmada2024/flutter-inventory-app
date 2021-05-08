@@ -66,7 +66,9 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - images/logo.png
-    - images/flutter.svg
+    - images/on1.svg
+    - images/on2.svg
+    - images/on3.svg
   
   fonts:
     - family: OLED

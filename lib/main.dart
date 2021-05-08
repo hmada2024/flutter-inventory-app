@@ -22,6 +22,7 @@ Future<void> main() async {
   String userImage = prefs.getString('user_profile_pic') ?? "";
 
   runApp(MaterialApp(
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(primarySwatch: Colors.green),
       home: SplashScreen(
         seconds: 3,

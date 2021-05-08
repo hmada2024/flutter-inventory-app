@@ -159,7 +159,7 @@ class _AuthPageState extends State<AuthPage> {
                                 "Forget Password?",
                               ),
                               onTap: () {
-                                Navigator.pushNamed(context, '/forget-pass');
+                                Navigator.pushNamed(context, loginRoute);
                               },
                             ),
                           ),
@@ -312,7 +312,7 @@ class _AuthPageState extends State<AuthPage> {
           .showSnackBar(CustomSnackBar.errorSnackBar(result['message'], 2));
     } else {
       Navigator.pushNamedAndRemoveUntil(
-          context, '/forget-pass', (Route<dynamic> route) => false);
+          context, homeRoute, (Route<dynamic> route) => false);
     }
   }
 

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:greenland_stock/constants.dart';
 import 'package:greenland_stock/screens/utils/CustomColors.dart';
 
 Widget appBar(BuildContext context) {
@@ -44,10 +44,10 @@ Widget appBar(BuildContext context) {
                     Padding(
                       padding: const EdgeInsets.only(top: 8.0),
                       child: Text(
-                        "FC Stock",
+                        app_name,
                         style: TextStyle(
                             fontFamily: "OLED",
-                            fontSize: 16,
+                            fontSize: 12,
                             fontWeight: FontWeight.bold,
                             color: Colors.black),
                       ),
@@ -84,11 +84,12 @@ Widget appBar(BuildContext context) {
         ),
       ),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [CustomColors.green, CustomColors.lightGrey],
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-        ),
+        // gradient: LinearGradient(
+        //   colors: [CustomColors.green, CustomColors.lightGrey],
+        //   begin: Alignment.topCenter,
+        //   end: Alignment.bottomCenter,
+        // ),
+        color: CustomColors.green
       ),
     ),
     preferredSize: Size(MediaQuery.of(context).size.width, 50.0),

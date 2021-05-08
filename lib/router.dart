@@ -3,7 +3,7 @@ import 'package:greenland_stock/screens/app/AuthPage.dart';
 import 'package:greenland_stock/screens/app/LoginPage.dart';
 import 'package:greenland_stock/screens/app/MobileSigninPage.dart';
 import 'package:greenland_stock/screens/app/onboardscreen.dart';
-import 'package:greenland_stock/screens/home/HomeScreen.dart';
+import 'package:greenland_stock/screens/home/home_screen.dart';
 
 class Router {
   static Route<dynamic> generateRoute(RouteSettings settings) {

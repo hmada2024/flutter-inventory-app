@@ -1,4 +1,4 @@
-const app_name = "FC Mart";
+const app_name = "Greenland Stock";
 const app_version = '1.1.1';
 
 const support_email_ID = "support@chipchop.in";

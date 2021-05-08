@@ -259,7 +259,7 @@ List<SliderModel> getSlides() {
   sliderModel.setDesc(
       "- Lorem Ipsum is simply dummy text of the printing and typesetting industry");
   sliderModel.setTitle("stock Management");
-  sliderModel.setImageAssetPath("images/flutter.svg");
+  sliderModel.setImageAssetPath("images/on1.svg");
 
   slides.add(sliderModel);
 
@@ -269,7 +269,7 @@ List<SliderModel> getSlides() {
   sliderModel.setDesc(
       "- Lorem Ipsum is simply dummy text of the printing and typesetting industry");
   sliderModel.setTitle("access anytime");
-  sliderModel.setImageAssetPath("images/flutter.svg");
+  sliderModel.setImageAssetPath("images/on2.svg");
   slides.add(sliderModel);
 
   sliderModel = new SliderModel();
@@ -278,7 +278,7 @@ List<SliderModel> getSlides() {
   sliderModel.setDesc(
       "- Lorem Ipsum is simply dummy text of the printing and typesetting industry");
   sliderModel.setTitle("Alert on low stock");
-  sliderModel.setImageAssetPath("images/flutter.svg");
+  sliderModel.setImageAssetPath("images/on3.svg");
   slides.add(sliderModel);
 
   sliderModel = new SliderModel();
