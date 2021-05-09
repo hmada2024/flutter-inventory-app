@@ -41,4 +41,35 @@ class Products extends Model {
     return _productCollRef.doc(uuid);
   }
 
+  String getID() {
+    return this.uuid;
+  }
+
+  Future<void> create() async {
+    try {
+      DocumentReference docRef = getCollectionRef().doc();
+      this.createdAt = DateTime.now();
+      this.updatedAt = DateTime.now();
+      this.uuid = docRef.id;
+      this.searchKeys =
+          this.name.split(" ").map((e) => e.toLowerCase()).toList();
+
+      await docRef.set(this.toJson());
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  Stream<QuerySnapshot> streamAllProducts() {
+    return getCollectionRef().snapshots();
+  }
+
+  Future<void> remove() async {
+    try {
+      DocumentReference docRef = getDocumentReference(this.uuid);
+      await docRef.delete();
+    } catch (err) {
+      throw err;
+    }
+  }
 }

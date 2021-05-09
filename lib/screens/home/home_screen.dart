@@ -1,8 +1,14 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:greenland_stock/constants.dart';
+import 'package:greenland_stock/db/products.dart';
 import 'package:greenland_stock/screens/app/appBar.dart';
+import 'package:greenland_stock/screens/home/edit_products.dart';
 import 'package:greenland_stock/screens/settings/SettingsHome.dart';
+import 'package:greenland_stock/screens/utils/AsyncWidgets.dart';
 import 'package:greenland_stock/screens/utils/CustomColors.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -44,6 +50,13 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Scaffold(
         appBar: appBar(context),
         backgroundColor: CustomColors.lightGrey,
+        floatingActionButton: FloatingActionButton.extended(
+          onPressed: () {
+            Navigator.pushNamed(context, addProductRoute);
+          },
+          label: Text("ADD"),
+          icon: Icon(Icons.add),
+        ),
         body: SingleChildScrollView(
           child: _selectedIndex == 0
               ? Container(
@@ -121,18 +134,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                           TextStyle(color: CustomColors.grey),
                                     ),
                                   ),
-                                )
-                                // Text(
-                                //   "Search for Products",
-                                //   style:
-                                //       TextStyle(fontSize: 16, color: Colors.grey),
-                                // ),
+                                ),
                               ],
                             ),
                           ),
                         ),
                       ),
-                    )
+                    ),
+                    _getProducts(),
                   ]),
                 )
               : SettingsHome(),
@@ -210,5 +219,139 @@ class _HomeScreenState extends State<HomeScreen> {
     } else {
       return Future.value(true);
     }
+  }
+
+  Widget _getProducts() {
+    return StreamBuilder(
+      stream: Products().streamAllProducts(),
+      builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        Widget child;
+
+        if (snapshot.hasData) {
+          if (snapshot.data.docs.length == 0) {
+            child = Container(
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.sentiment_neutral,
+                      size: 40,
+                      color: CustomColors.black,
+                    ),
+                    SizedBox(height: 20),
+                    Text(
+                      "No Products Found!",
+                      style: TextStyle(
+                        color: CustomColors.alertRed,
+                        fontSize: 16,
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                  ],
+                ),
+              ),
+            );
+          } else {
+            child = Container(
+              child: ListView.separated(
+                shrinkWrap: true,
+                primary: false,
+                itemCount: snapshot.data.docs.length,
+                separatorBuilder: (BuildContext context, int index) => Divider(
+                  color: CustomColors.black,
+                ),
+                itemBuilder: (BuildContext context, int index) {
+                  Products _p =
+                      Products.fromJson(snapshot.data.docs[index].data());
+
+                  return Slidable(
+                    actionPane: SlidableDrawerActionPane(),
+                    actionExtentRatio: 0.25,
+                    child: _getProductBody(_p),
+                    actions: <Widget>[
+                      IconSlideAction(
+                        caption: 'Edit',
+                        color: Colors.indigo,
+                        icon: Icons.edit,
+                        onTap: () => Navigator.pushNamed(
+                            context, editProductRoute,
+                            arguments: _p),
+                      ),
+                    ],
+                    secondaryActions: <Widget>[
+                      IconSlideAction(
+                          caption: 'Remove',
+                          color: Colors.red[400],
+                          icon: Icons.delete_forever,
+                          onTap: () async {
+                            await _p.remove();
+                          }),
+                    ],
+                  );
+                },
+              ),
+            );
+          }
+        } else if (snapshot.hasError) {
+          child = Center(
+            child: Column(
+              children: AsyncWidgets.asyncError(),
+            ),
+          );
+        } else {
+          child = Center(
+            child: Column(
+              children: AsyncWidgets.asyncWaiting(),
+            ),
+          );
+        }
+        return child;
+      },
+    );
+  }
+
+  Widget _getProductBody(Products _p) {
+    return Container(
+      padding: EdgeInsets.fromLTRB(15, 5, 10, 5),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Flexible(
+            child: Text(
+              _p.name,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                  color: CustomColors.black,
+                  fontSize: 14.0,
+                  fontWeight: FontWeight.bold),
+            ),
+          ),
+          SizedBox(height: 2.0),
+          _p.businessName.isNotEmpty ? Text(
+            _p.businessName ?? "",
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              color: CustomColors.black,
+              fontSize: 12.0,
+            ),
+          ) : Container(),
+          Text(
+            'Quantity :  ${_p.quantity}',
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              color: CustomColors.black,
+              fontSize: 12.0,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

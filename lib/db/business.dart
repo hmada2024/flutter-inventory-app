@@ -37,4 +37,8 @@ class Business extends Model {
     return _bCollRef.doc(uuid);
   }
 
+  String getID() {
+    return this.uuid;
+  }
+
 }

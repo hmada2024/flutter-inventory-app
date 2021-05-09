@@ -14,3 +14,5 @@ const String authRoute = '/auth';
 const String loginRoute = '/login';
 const String registerRoute = '/register';
 const String homeRoute = '/home';
+const String addProductRoute = '/add-product';
+const String editProductRoute = '/edit-product';
