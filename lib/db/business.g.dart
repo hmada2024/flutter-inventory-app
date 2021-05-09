@@ -3,7 +3,7 @@ part of 'business.dart';
 Business _$BusinessFromJson(Map<String, dynamic> json) {
   return Business()
     ..uuid = json['uuid'] as String
-    ..name = json['store_name'] as String ?? ''
+    ..name = json['business_name'] as String ?? ''
     ..ownedBy = json['owned_by'] as String
     ..users = (json['users'] as List)
             ?.map((e) => e == null ? null : e as String)
@@ -43,7 +43,7 @@ int _getMillisecondsSinceEpoch(Timestamp ts) {
 
 Map<String, dynamic> _$BusinessToJson(Business instance) => <String, dynamic>{
       'uuid': instance.uuid,
-      'store_name': instance.name,
+      'business_name': instance.name,
       'owned_by': instance.ownedBy,
       'users': instance.users == null ? [] : instance.users,
       'search_keys': instance.searchKeys == null ? [] : instance.searchKeys,

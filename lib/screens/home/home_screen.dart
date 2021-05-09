@@ -356,24 +356,34 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           SizedBox(height: 2.0),
           _p.businessName.isNotEmpty
-              ? Text(
-                  _p.businessName ?? "",
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    color: CustomColors.black,
-                    fontSize: 12.0,
-                  ),
-                )
+              ? Row(
+                children: [
+                  SizedBox(width: 5.0),
+                  Text(
+                      _p.businessName ?? "",
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: CustomColors.black,
+                        fontSize: 12.0,
+                      ),
+                    ),
+                ],
+              )
               : Container(),
-          Text(
-            'Quantity :  ${_p.quantity}',
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-              color: CustomColors.black,
-              fontSize: 12.0,
-            ),
+          Row(
+            children: [
+              SizedBox(width: 5.0),
+              Text(
+                'Quantity :  ${_p.quantity}',
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: CustomColors.black,
+                  fontSize: 12.0,
+                ),
+              ),
+            ],
           ),
         ],
       ),

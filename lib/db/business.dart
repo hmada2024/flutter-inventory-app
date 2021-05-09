@@ -1,4 +1,5 @@
 import 'package:greenland_stock/db/model.dart';
+import 'package:greenland_stock/services/user_service.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -12,7 +13,7 @@ class Business extends Model {
   String uuid;
   @JsonKey(name: 'owned_by', defaultValue: "")
   String ownedBy;
-  @JsonKey(name: 'store_name', defaultValue: "")
+  @JsonKey(name: 'business_name', defaultValue: "")
   String name;
   @JsonKey(name: 'users')
   List<String> users;
@@ -41,4 +42,23 @@ class Business extends Model {
     return this.uuid;
   }
 
+  Future<List<Business>> getStoresForUser() async {
+    try {
+      QuerySnapshot snap = await getCollectionRef()
+          .where('users', arrayContains: cachedLocalUser.getID())
+          .get();
+
+      List<Business> _b = [];
+      if (snap.docs.isNotEmpty) {
+        for (var i = 0; i < snap.docs.length; i++) {
+          Business _business = Business.fromJson(snap.docs[i].data());
+          _b.add(_business);
+        }
+      }
+
+      return _b;
+    } catch (err) {
+      throw err;
+    }
+  }
 }
