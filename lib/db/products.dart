@@ -64,6 +64,13 @@ class Products extends Model {
     return getCollectionRef().snapshots();
   }
 
+  Stream<QuerySnapshot> searchByKeys(String key) {
+    List<String> keys = key.split(" ").map((e) => e.toLowerCase()).toList();
+    return getCollectionRef()
+        .where('search_keys', arrayContainsAny: keys)
+        .snapshots();
+  }
+
   Future<void> remove() async {
     try {
       DocumentReference docRef = getDocumentReference(this.uuid);

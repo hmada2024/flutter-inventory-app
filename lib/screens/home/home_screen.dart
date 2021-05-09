@@ -22,13 +22,20 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   TextEditingController _searchController = TextEditingController();
 
+  Stream<QuerySnapshot> _pStream;
+
   int backPressCounter = 0;
   int _selectedIndex = 0;
+
+  bool isSearchTriggered;
 
   @override
   void initState() {
     super.initState();
     _selectedIndex = widget.index;
+    isSearchTriggered = false;
+
+    _pStream = Products().streamAllProducts();
   }
 
   void _onItemTapped(int index) {
@@ -38,7 +45,10 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _submit(String key) {
-    setState(() {});
+    isSearchTriggered = true;
+    setState(() {
+      _pStream = Products().searchByKeys(key);
+    });
   }
 
   @override
@@ -122,12 +132,31 @@ class _HomeScreenState extends State<HomeScreen> {
                                     style: TextStyle(
                                       color: CustomColors.black,
                                     ),
+                                    onChanged: (searchKey) {
+                                      if (searchKey.trim().isNotEmpty &&
+                                          searchKey.trim().length >= 3) {
+                                        _submit(searchKey);
+                                      }
+                                    },
                                     onFieldSubmitted: (searchKey) {
                                       if (searchKey.trim().isNotEmpty) {
                                         _submit(searchKey);
                                       }
                                     },
                                     decoration: InputDecoration(
+                                      suffixIcon: InkWell(
+                                        onTap: () {
+                                          if (isSearchTriggered) {
+                                            _searchController.text = '';
+                                            isSearchTriggered = false;
+                                            setState(() {
+                                              _pStream = Products()
+                                                  .streamAllProducts();
+                                            });
+                                          }
+                                        },
+                                        child: Icon(Icons.clear),
+                                      ),
                                       border: InputBorder.none,
                                       hintText: "Search for Products",
                                       hintStyle:
@@ -140,6 +169,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
                       ),
+                    ),
+                    SizedBox(
+                      height: 10.0,
                     ),
                     _getProducts(),
                   ]),
@@ -161,6 +193,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 size: size,
                 child: InkWell(
                   onTap: () {
+                    _pStream = Products().streamAllProducts();
+                    _searchController.text = '';
+                    isSearchTriggered = false;
                     _onItemTapped(0);
                   },
                   child: Column(
@@ -223,7 +258,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _getProducts() {
     return StreamBuilder(
-      stream: Products().streamAllProducts(),
+      stream: _pStream,
       builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
         Widget child;
 
@@ -332,15 +367,17 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           SizedBox(height: 2.0),
-          _p.businessName.isNotEmpty ? Text(
-            _p.businessName ?? "",
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-              color: CustomColors.black,
-              fontSize: 12.0,
-            ),
-          ) : Container(),
+          _p.businessName.isNotEmpty
+              ? Text(
+                  _p.businessName ?? "",
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: CustomColors.black,
+                    fontSize: 12.0,
+                  ),
+                )
+              : Container(),
           Text(
             'Quantity :  ${_p.quantity}',
             maxLines: 1,
