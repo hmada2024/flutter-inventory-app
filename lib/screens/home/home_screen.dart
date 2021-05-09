@@ -76,6 +76,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: TextFormField(
+                        controller: _searchController,
                         onChanged: (searchKey) {
                           if (searchKey.trim().isNotEmpty &&
                               searchKey.trim().length >= 3) {
