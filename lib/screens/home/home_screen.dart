@@ -59,13 +59,13 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Scaffold(
         appBar: appBar(context),
         backgroundColor: CustomColors.lightGrey,
-        floatingActionButton: FloatingActionButton.extended(
+        floatingActionButton: _selectedIndex == 0 ? FloatingActionButton.extended(
           onPressed: () {
             Navigator.pushNamed(context, addProductRoute);
           },
           label: Text("ADD"),
           icon: Icon(Icons.add),
-        ),
+        ) : Container(),
         body: SingleChildScrollView(
           child: _selectedIndex == 0
               ? Container(
