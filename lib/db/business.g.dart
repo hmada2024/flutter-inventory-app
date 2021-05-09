@@ -13,6 +13,9 @@ Business _$BusinessFromJson(Map<String, dynamic> json) {
             ?.map((e) => e == null ? null : e as String)
             ?.toList() ??
         []
+    ..address = json['address'] == null
+        ? new Address()
+        : Address.fromJson(json['address'] as Map<String, dynamic>)
     ..createdAt = json['created_at'] == null
         ? null
         : (json['created_at'] is Timestamp)
@@ -47,6 +50,7 @@ Map<String, dynamic> _$BusinessToJson(Business instance) => <String, dynamic>{
       'owned_by': instance.ownedBy,
       'users': instance.users == null ? [] : instance.users,
       'search_keys': instance.searchKeys == null ? [] : instance.searchKeys,
+      'address': instance.address?.toJson(),
       'created_at': instance.createdAt,
       'updated_at': instance.updatedAt,
     };

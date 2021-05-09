@@ -8,6 +8,8 @@ import 'package:greenland_stock/screens/app/onboardscreen.dart';
 import 'package:greenland_stock/screens/home/add_product.dart';
 import 'package:greenland_stock/screens/home/edit_products.dart';
 import 'package:greenland_stock/screens/home/home_screen.dart';
+import 'package:greenland_stock/screens/settings/add_business.dart';
+import 'package:greenland_stock/screens/settings/business_settings.dart';
 
 class Router {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -32,6 +34,10 @@ class Router {
       case editProductRoute:
         Products data = settings.arguments as Products;
         return MaterialPageRoute(builder: (_) => EditProduct(data));
+      case businessSettingsRoute:
+        return MaterialPageRoute(builder: (_) => BusinessSettings());
+      case businessAddRoute:
+        return MaterialPageRoute(builder: (_) => AddBusiness());
       default:
         return MaterialPageRoute(
             builder: (_) => Scaffold(

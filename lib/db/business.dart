@@ -1,5 +1,6 @@
 import 'package:greenland_stock/db/model.dart';
 import 'package:greenland_stock/services/user_service.dart';
+import 'package:greenland_stock/db/address.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -19,6 +20,8 @@ class Business extends Model {
   List<String> users;
   @JsonKey(name: 'search_keys', defaultValue: [""])
   List<String> searchKeys;
+  @JsonKey(name: 'address')
+  Address address;
   @JsonKey(name: 'created_at')
   DateTime createdAt;
   @JsonKey(name: 'updated_at')
@@ -42,6 +45,12 @@ class Business extends Model {
     return this.uuid;
   }
 
+  Stream<QuerySnapshot> streamForUser() {
+    return getCollectionRef()
+        .where('users', arrayContains: cachedLocalUser.getID())
+        .snapshots();
+  }
+
   Future<List<Business>> getStoresForUser() async {
     try {
       QuerySnapshot snap = await getCollectionRef()
@@ -57,6 +66,22 @@ class Business extends Model {
       }
 
       return _b;
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  Future<void> create() async {
+    try {
+      DocumentReference docRef = getCollectionRef().doc();
+      this.createdAt = DateTime.now();
+      this.updatedAt = DateTime.now();
+      this.users = [cachedLocalUser.getID()];
+      this.uuid = docRef.id;
+      this.searchKeys =
+          this.name.split(" ").map((e) => e.toLowerCase()).toList();
+
+      await docRef.set(this.toJson());
     } catch (err) {
       throw err;
     }

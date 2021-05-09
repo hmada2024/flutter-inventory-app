@@ -123,6 +123,68 @@ class _SettingsHomeState extends State<SettingsHome> {
                                 ),
                                 child: Padding(
                                   padding: EdgeInsets.all(5),
+                                  child: Icon(
+                                    Icons.store,
+                                    size: 35,
+                                    color: CustomColors.black,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(10),
+                      child: Text(
+                        "Business Settings",
+                        style: TextStyle(
+                          fontSize: 16.0,
+                          color: CustomColors.black,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                onTap: () => Navigator.pushNamed(context, businessSettingsRoute)
+              ),
+              Divider(
+                color: CustomColors.green,
+                thickness: 2.0,
+                height: 1,
+              ),
+              InkWell(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.only(right: 10),
+                      child: Stack(
+                        children: <Widget>[
+                          Container(
+                            width: 85,
+                            height: 80,
+                            decoration: BoxDecoration(
+                                color: CustomColors.green,
+                                shape: BoxShape.rectangle,
+                                borderRadius: BorderRadius.only(
+                                    topRight: Radius.circular(40),
+                                    bottomRight: Radius.circular(40))),
+                          ),
+                          Positioned(
+                            top: 10,
+                            left: 10,
+                            child: SizedBox(
+                              width: 60,
+                              height: 60,
+                              child: DecoratedBox(
+                                decoration: BoxDecoration(
+                                  color: CustomColors.white,
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Padding(
+                                  padding: EdgeInsets.all(5),
                                   child: ClipRRect(
                                     child: Image.asset(
                                       "images/logo.png",
