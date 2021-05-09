@@ -6,7 +6,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:greenland_stock/constants.dart';
 import 'package:greenland_stock/db/products.dart';
 import 'package:greenland_stock/screens/app/appBar.dart';
-import 'package:greenland_stock/screens/home/edit_products.dart';
 import 'package:greenland_stock/screens/settings/SettingsHome.dart';
 import 'package:greenland_stock/screens/utils/AsyncWidgets.dart';
 import 'package:greenland_stock/screens/utils/CustomColors.dart';
@@ -93,79 +92,68 @@ class _HomeScreenState extends State<HomeScreen> {
                             ]),
                         child: Padding(
                           padding: EdgeInsets.symmetric(horizontal: 8.0),
-                          child: InkWell(
-                            onTap: () {
-                              // Navigator.push(
-                              //   context,
-                              //   MaterialPageRoute(
-                              //     builder: (context) => SearchAppBar(2, ''),
-                              //     settings: RouteSettings(name: '/search/product'),
-                              //   ),
-                              // );
-                            },
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: <Widget>[
-                                Container(
-                                  padding: EdgeInsets.all(3.0),
-                                  decoration: BoxDecoration(
-                                      color: CustomColors.black,
-                                      borderRadius: BorderRadius.circular(20),
-                                      border: Border.all(
-                                          color: CustomColors.black)),
-                                  child: Icon(
-                                    Icons.search,
-                                    size: 15,
-                                    color: CustomColors.white,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: <Widget>[
+                              Container(
+                                padding: EdgeInsets.all(3.0),
+                                decoration: BoxDecoration(
+                                    color: CustomColors.black,
+                                    borderRadius: BorderRadius.circular(20),
+                                    border: Border.all(
+                                        color: CustomColors.black)),
+                                child: Icon(
+                                  Icons.search,
+                                  size: 15,
+                                  color: CustomColors.white,
+                                ),
+                              ),
+                              SizedBox(
+                                width: 10.0,
+                              ),
+                              Expanded(
+                                child: TextFormField(
+                                  controller: _searchController,
+                                  keyboardType: TextInputType.text,
+                                  textInputAction: TextInputAction.search,
+                                  textCapitalization:
+                                      TextCapitalization.sentences,
+                                  style: TextStyle(
+                                    color: CustomColors.black,
+                                  ),
+                                  onChanged: (searchKey) {
+                                    if (searchKey.trim().isNotEmpty &&
+                                        searchKey.trim().length >= 3) {
+                                      _submit(searchKey);
+                                    }
+                                  },
+                                  onFieldSubmitted: (searchKey) {
+                                    if (searchKey.trim().isNotEmpty) {
+                                      _submit(searchKey);
+                                    }
+                                  },
+                                  decoration: InputDecoration(
+                                    suffixIcon: InkWell(
+                                      onTap: () {
+                                        if (isSearchTriggered) {
+                                          _searchController.text = '';
+                                          isSearchTriggered = false;
+                                          setState(() {
+                                            _pStream = Products()
+                                                .streamAllProducts();
+                                          });
+                                        }
+                                      },
+                                      child: Icon(Icons.clear),
+                                    ),
+                                    border: InputBorder.none,
+                                    hintText: "Search for Products",
+                                    hintStyle:
+                                        TextStyle(color: CustomColors.grey),
                                   ),
                                 ),
-                                SizedBox(
-                                  width: 10.0,
-                                ),
-                                Expanded(
-                                  child: TextFormField(
-                                    controller: _searchController,
-                                    keyboardType: TextInputType.text,
-                                    textInputAction: TextInputAction.search,
-                                    textCapitalization:
-                                        TextCapitalization.sentences,
-                                    style: TextStyle(
-                                      color: CustomColors.black,
-                                    ),
-                                    onChanged: (searchKey) {
-                                      if (searchKey.trim().isNotEmpty &&
-                                          searchKey.trim().length >= 3) {
-                                        _submit(searchKey);
-                                      }
-                                    },
-                                    onFieldSubmitted: (searchKey) {
-                                      if (searchKey.trim().isNotEmpty) {
-                                        _submit(searchKey);
-                                      }
-                                    },
-                                    decoration: InputDecoration(
-                                      suffixIcon: InkWell(
-                                        onTap: () {
-                                          if (isSearchTriggered) {
-                                            _searchController.text = '';
-                                            isSearchTriggered = false;
-                                            setState(() {
-                                              _pStream = Products()
-                                                  .streamAllProducts();
-                                            });
-                                          }
-                                        },
-                                        child: Icon(Icons.clear),
-                                      ),
-                                      border: InputBorder.none,
-                                      hintText: "Search for Products",
-                                      hintStyle:
-                                          TextStyle(color: CustomColors.grey),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
                         ),
                       ),
@@ -303,7 +291,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                   return Slidable(
                     actionPane: SlidableDrawerActionPane(),
-                    actionExtentRatio: 0.25,
+                    actionExtentRatio: 0.20,
                     child: _getProductBody(_p),
                     actions: <Widget>[
                       IconSlideAction(
