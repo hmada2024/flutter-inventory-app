@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:greenland_stock/constants.dart';
 import 'package:greenland_stock/db/user.dart';
+import 'package:greenland_stock/screens/utils/CustomColors.dart';
 import 'package:greenland_stock/screens/utils/CustomDialogs.dart';
 import 'package:greenland_stock/screens/utils/CustomSnackBar.dart';
 import 'package:greenland_stock/screens/utils/hash_generator.dart';
@@ -81,7 +82,7 @@ class _AuthPageState extends State<AuthPage> {
                   Padding(
                     padding: const EdgeInsets.only(top: 20),
                     child: Text(
-                      "Get started with your Email",
+                      "Login with Mobile Number & Password",
                       textAlign: TextAlign.center,
                       style: TextStyle(color: Colors.black38),
                     ),
@@ -94,7 +95,7 @@ class _AuthPageState extends State<AuthPage> {
                     child: Column(
                       children: [
                         SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.20,
+                          height: MediaQuery.of(context).size.height * 0.05,
                         ),
                         Container(
                           margin: const EdgeInsets.only(top: 8, bottom: 8),
@@ -157,6 +158,7 @@ class _AuthPageState extends State<AuthPage> {
                             child: GestureDetector(
                               child: Text(
                                 "Forget Password?",
+                                style: TextStyle(color: CustomColors.alertRed),
                               ),
                               onTap: () {
                                 Navigator.pushNamed(context, loginRoute);
@@ -190,7 +192,7 @@ class _AuthPageState extends State<AuthPage> {
                           ),
                         ),
                         Container(
-                            margin: EdgeInsets.only(top: 20, bottom: 10),
+                            margin: EdgeInsets.only(top: 20, bottom: 5),
                             child: Row(
                               children: [
                                 Expanded(
@@ -222,13 +224,13 @@ class _AuthPageState extends State<AuthPage> {
                             )),
                         GestureDetector(
                           child: Padding(
-                            padding: const EdgeInsets.only(top: 15),
+                            padding: const EdgeInsets.only(top: 10),
                             child: const Text.rich(
                               TextSpan(
                                 text: 'Don\'t have an account? ',
                                 children: [
                                   TextSpan(
-                                      text: 'Sign up.',
+                                      text: ' Register!',
                                       style: TextStyle(
                                         color: Colors.green,
                                       )),
@@ -300,7 +302,7 @@ class _AuthPageState extends State<AuthPage> {
   }
 
   login(String _userID) async {
-    CustomDialogs.showLoadingDialog(context, _keyLoader);
+    // CustomDialogs.showLoadingDialog(context, _keyLoader);
 
     var result = await _authController.signInWithMobileNumber(_userID);
 

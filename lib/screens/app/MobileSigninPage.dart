@@ -75,14 +75,14 @@ class _MobileSignInPageState extends State<MobileSignInPage> {
                     ),
                     Padding(
                       padding:
-                          const EdgeInsets.only(top: 18, right: 25, left: 25),
+                          const EdgeInsets.only(top: 10, right: 25, left: 25),
                       child: Divider(
                         height: 1,
                         color: Colors.black45,
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(top: 20),
+                      padding: const EdgeInsets.only(top: 10),
                       child: Text(
                         "Get started with your name",
                         textAlign: TextAlign.center,
@@ -97,7 +97,7 @@ class _MobileSignInPageState extends State<MobileSignInPage> {
                       child: Column(
                         children: [
                           SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.08,
+                            height: MediaQuery.of(context).size.height * 0.05,
                           ),
                           Container(
                             margin: const EdgeInsets.only(top: 5, bottom: 5),
@@ -205,7 +205,7 @@ class _MobileSignInPageState extends State<MobileSignInPage> {
                             ),
                           ),
                           Container(
-                              margin: EdgeInsets.only(top: 20, bottom: 10),
+                              margin: EdgeInsets.only(top: 20, bottom: 5),
                               child: Row(
                                 children: [
                                   Expanded(
@@ -237,7 +237,7 @@ class _MobileSignInPageState extends State<MobileSignInPage> {
                               )),
                           GestureDetector(
                             child: Padding(
-                              padding: const EdgeInsets.only(top: 15),
+                              padding: const EdgeInsets.only(top: 10),
                               child: const Text.rich(
                                 TextSpan(
                                   text: 'Already have an account? ',
@@ -289,12 +289,12 @@ class _MobileSignInPageState extends State<MobileSignInPage> {
           "Password must have minimum 4 digits", 2));
       return;
     } else {
-      CustomDialogs.actionWaiting(context);
+      // CustomDialogs.actionWaiting(context);
       this.number = _phoneNumberController.text;
 
       var data = await user.User().getByID(countryCode.toString() + number);
       if (data != null) {
-        Navigator.pop(context);
+        // Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar.errorSnackBar(
             "Found an existing user for this mobile number", 2));
       } else {
@@ -332,7 +332,7 @@ class _MobileSignInPageState extends State<MobileSignInPage> {
           _lastNameController.text,
           authResult.user.uid);
       if (!result['is_success']) {
-        Navigator.pop(context);
+        // Navigator.pop(context);
         ScaffoldMessenger.of(context)
             .showSnackBar(CustomSnackBar.errorSnackBar(result['message'], 5));
       } else {
@@ -349,7 +349,7 @@ class _MobileSignInPageState extends State<MobileSignInPage> {
         );
       }
     }).catchError((error) {
-      Navigator.pop(context);
+      // Navigator.pop(context);
       ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar.errorSnackBar(
           "Something has gone wrong, please try later", 2));
       ScaffoldMessenger.of(context)
@@ -363,8 +363,8 @@ class _MobileSignInPageState extends State<MobileSignInPage> {
 
     _smsVerificationCode = verificationId;
     _forceResendingToken = code;
-    Navigator.pop(context);
-    CustomDialogs.actionWaiting(context);
+    // Navigator.pop(context);
+    // CustomDialogs.actionWaiting(context);
   }
 
   _verificationFailed(dynamic authException, BuildContext context) {

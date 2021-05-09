@@ -309,11 +309,11 @@ class _PhoneAuthVerifyState extends State<PhoneAuthVerify> {
       resendSMSCount = resendSMSCount + 1;
     });
     Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
-    CustomDialogs.showLoadingDialog(context, _keyLoader);
+    // CustomDialogs.showLoadingDialog(context, _keyLoader);
   }
 
   _verificationFailed(dynamic authException, BuildContext context) {
-    Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+    // Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
     ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar.errorSnackBar(
         "Verification Failed:" + authException.message.toString(), 2));
   }
@@ -326,7 +326,7 @@ class _PhoneAuthVerifyState extends State<PhoneAuthVerify> {
           .showSnackBar(CustomSnackBar.errorSnackBar("Invalid OTP", 2));
       errorController.add(ErrorAnimationType.shake);
     } else {
-      CustomDialogs.showLoadingDialog(context, _keyLoader);
+      // CustomDialogs.showLoadingDialog(context, _keyLoader);
 
       if (kIsWeb) {
         await widget.confirmResult.confirm(currentText.trim());
@@ -353,7 +353,7 @@ class _PhoneAuthVerifyState extends State<PhoneAuthVerify> {
             widget.lastName,
             authResult.user.uid);
         if (!result['is_success']) {
-          Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+          // Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
           ScaffoldMessenger.of(context)
               .showSnackBar(CustomSnackBar.errorSnackBar(result['message'], 5));
         } else {
@@ -363,7 +363,7 @@ class _PhoneAuthVerifyState extends State<PhoneAuthVerify> {
         dynamic result = await _authController.signInWithMobileNumber(
             widget.countryCode.toString() + widget.number);
         if (!result['is_success']) {
-          Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+          // Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
           ScaffoldMessenger.of(context)
               .showSnackBar(CustomSnackBar.errorSnackBar(result['message'], 5));
         } else {
@@ -378,7 +378,7 @@ class _PhoneAuthVerifyState extends State<PhoneAuthVerify> {
         }
       }
     }).catchError((error) {
-      Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+      // Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
       ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar.errorSnackBar(
           "Something has gone wrong, please try later", 2));
     });

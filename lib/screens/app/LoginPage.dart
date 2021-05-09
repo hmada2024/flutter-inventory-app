@@ -141,7 +141,7 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                         ),
                         Container(
-                            margin: EdgeInsets.only(top: 20, bottom: 10),
+                            margin: EdgeInsets.only(top: 20, bottom: 5),
                             child: Row(
                               children: [
                                 Expanded(
@@ -173,7 +173,7 @@ class _LoginPageState extends State<LoginPage> {
                             )),
                         InkWell(
                           child: Padding(
-                            padding: const EdgeInsets.only(top: 15),
+                            padding: const EdgeInsets.only(top: 10),
                             child: const Text.rich(
                               TextSpan(
                                 text: 'Don\'t have an account? ',
@@ -209,14 +209,14 @@ class _LoginPageState extends State<LoginPage> {
           CustomSnackBar.errorSnackBar("Enter valid Mobile Number", 2));
       return;
     } else {
-      CustomDialogs.showLoadingDialog(context, _keyLoader);
+      // CustomDialogs.showLoadingDialog(context, _keyLoader);
 
       number = _number.text;
       try {
         Map<String, dynamic> _uJSON =
             await user.User().getByID(countryCode.toString() + number);
         if (_uJSON == null) {
-          Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+          // Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
           ScaffoldMessenger.of(context).showSnackBar(
               CustomSnackBar.errorSnackBar(
                   "No USER found for this Number, please 'SIGN UP'", 2));
@@ -226,13 +226,13 @@ class _LoginPageState extends State<LoginPage> {
           _verifyPhoneNumber();
         }
       } on PlatformException catch (err) {
-        Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+        // Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
         ScaffoldMessenger.of(context).showSnackBar(
           CustomSnackBar.errorSnackBar("Error while Login: " + err.message, 2),
         );
       } on Exception catch (err) {
         print(err);
-        Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+        // Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
         ScaffoldMessenger.of(context).showSnackBar(
           CustomSnackBar.errorSnackBar(
               "Error while Login, please try later! ", 2),
@@ -289,7 +289,7 @@ class _LoginPageState extends State<LoginPage> {
       var result = await _authController.signInWithMobileNumber(_user.getID());
 
       if (!result['is_success']) {
-        Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+        // Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
         ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar.errorSnackBar(
             "Unable to Login, Something went wrong. Please try again Later!",
             2));
@@ -306,7 +306,7 @@ class _LoginPageState extends State<LoginPage> {
         );
       }
     }).catchError((error) {
-      Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+      // Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
       ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar.errorSnackBar(
           "Something has gone wrong, please try later", 2));
     });
@@ -318,12 +318,12 @@ class _LoginPageState extends State<LoginPage> {
 
     _smsVerificationCode = verificationId;
     _forceResendingToken = code;
-    Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
-    CustomDialogs.showLoadingDialog(context, _keyLoader);
+    // Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+    // CustomDialogs.showLoadingDialog(context, _keyLoader);
   }
 
   _verificationFailed(dynamic authException, BuildContext context) {
-    Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+    // Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
     ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar.errorSnackBar(
         "Verification Failed: " + authException.message.toString(), 2));
   }

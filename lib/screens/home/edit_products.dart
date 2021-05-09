@@ -208,7 +208,7 @@ class _EditProductState extends State<EditProduct> {
         _p.searchKeys =
             this.pName.split(" ").map((e) => e.toLowerCase()).toList();
 
-        CustomDialogs.actionWaiting(context);
+        // CustomDialogs.actionWaiting(context);
         await _p.update(_p.toJson());
         Navigator.pop(context);
         // Navigator.pop(context);
