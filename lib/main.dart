@@ -55,6 +55,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: app_name,
       theme: ThemeData(
+          primarySwatch: Colors.green,
           brightness: Brightness.light,
           textTheme: GoogleFonts.poppinsTextTheme(
             Theme.of(context).textTheme,

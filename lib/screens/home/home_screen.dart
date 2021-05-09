@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:greenland_stock/constants.dart';
 import 'package:greenland_stock/db/products.dart';
 import 'package:greenland_stock/screens/app/appBar.dart';
@@ -52,20 +52,20 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = Size((MediaQuery.of(context).size.width / 2), 100);
-
     return WillPopScope(
       onWillPop: onWillPop,
       child: Scaffold(
         appBar: appBar(context),
         backgroundColor: CustomColors.lightGrey,
-        floatingActionButton: _selectedIndex == 0 ? FloatingActionButton.extended(
-          onPressed: () {
-            Navigator.pushNamed(context, addProductRoute);
-          },
-          label: Text("ADD"),
-          icon: Icon(Icons.add),
-        ) : Container(),
+        floatingActionButton: _selectedIndex == 0
+            ? FloatingActionButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, addProductRoute);
+                },
+                child: Icon(Icons.add),
+                tooltip: 'Add Items',
+              )
+            : Container(),
         body: SingleChildScrollView(
           child: _selectedIndex == 0
               ? Container(
@@ -73,93 +73,51 @@ class _HomeScreenState extends State<HomeScreen> {
                     SizedBox(
                       height: 10.0,
                     ),
-                    Align(
-                      alignment: Alignment.center,
-                      child: Container(
-                        height: 45,
-                        width: MediaQuery.of(context).size.width - 30,
-                        decoration: BoxDecoration(
-                            color: CustomColors.lightGrey,
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(15.0),
-                            ),
-                            boxShadow: [
-                              BoxShadow(
-                                color: CustomColors.grey,
-                                blurRadius: 10.0,
-                                spreadRadius: 1.0,
-                              )
-                            ]),
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 8.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: <Widget>[
-                              Container(
-                                padding: EdgeInsets.all(3.0),
-                                decoration: BoxDecoration(
-                                    color: CustomColors.black,
-                                    borderRadius: BorderRadius.circular(20),
-                                    border: Border.all(
-                                        color: CustomColors.black)),
-                                child: Icon(
-                                  Icons.search,
-                                  size: 15,
-                                  color: CustomColors.white,
-                                ),
-                              ),
-                              SizedBox(
-                                width: 10.0,
-                              ),
-                              Expanded(
-                                child: TextFormField(
-                                  controller: _searchController,
-                                  keyboardType: TextInputType.text,
-                                  textInputAction: TextInputAction.search,
-                                  textCapitalization:
-                                      TextCapitalization.sentences,
-                                  style: TextStyle(
-                                    color: CustomColors.black,
-                                  ),
-                                  onChanged: (searchKey) {
-                                    if (searchKey.trim().isNotEmpty &&
-                                        searchKey.trim().length >= 3) {
-                                      _submit(searchKey);
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextFormField(
+                        onChanged: (searchKey) {
+                          if (searchKey.trim().isNotEmpty &&
+                              searchKey.trim().length >= 3) {
+                            _submit(searchKey);
+                          }
+                        },
+                        autocorrect: true,
+                        decoration: InputDecoration(
+                          hintText: 'Search Product..',
+                          prefixIcon: Icon(Icons.search),
+                          suffixIcon: isSearchTriggered
+                              ? InkWell(
+                                  onTap: () {
+                                    if (isSearchTriggered) {
+                                      _searchController.text = '';
+                                      isSearchTriggered = false;
+                                      setState(() {
+                                        _pStream =
+                                            Products().streamAllProducts();
+                                      });
                                     }
                                   },
-                                  onFieldSubmitted: (searchKey) {
-                                    if (searchKey.trim().isNotEmpty) {
-                                      _submit(searchKey);
-                                    }
-                                  },
-                                  decoration: InputDecoration(
-                                    suffixIcon: InkWell(
-                                      onTap: () {
-                                        if (isSearchTriggered) {
-                                          _searchController.text = '';
-                                          isSearchTriggered = false;
-                                          setState(() {
-                                            _pStream = Products()
-                                                .streamAllProducts();
-                                          });
-                                        }
-                                      },
-                                      child: Icon(Icons.clear),
-                                    ),
-                                    border: InputBorder.none,
-                                    hintText: "Search for Products",
-                                    hintStyle:
-                                        TextStyle(color: CustomColors.grey),
-                                  ),
-                                ),
-                              ),
-                            ],
+                                  child: Icon(Icons.clear),
+                                )
+                              : SizedBox(),
+                          filled: true,
+                          fillColor: Colors.grey[200],
+                          contentPadding: const EdgeInsets.all(5.0),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(8.0)),
+                            borderSide:
+                                BorderSide(color: Color(0xFFC1C1C1), width: 1),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(8.0)),
+                            borderSide:
+                                BorderSide(color: Color(0xFFC1C1C1), width: 1),
                           ),
                         ),
                       ),
-                    ),
-                    SizedBox(
-                      height: 10.0,
                     ),
                     _getProducts(),
                   ]),
@@ -168,17 +126,11 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         bottomNavigationBar: Container(
           height: 60,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-                colors: [CustomColors.white, CustomColors.green],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter),
-          ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
-              SizedBox.fromSize(
-                size: size,
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.50,
                 child: InkWell(
                   onTap: () {
                     _pStream = Products().streamAllProducts();
@@ -192,18 +144,20 @@ class _HomeScreenState extends State<HomeScreen> {
                       Icon(
                         Icons.home,
                         size: 25.0,
-                        color: CustomColors.black,
+                        color: Colors.green,
                       ),
-                      Text("Home", style: GoogleFonts.orienta()),
+                      Text(
+                        "Home",
+                      ),
                     ],
                   ),
                 ),
               ),
-              SizedBox.fromSize(
-                size: size,
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.50,
                 child: InkWell(
                   onTap: () {
-                    _onItemTapped(4);
+                    _onItemTapped(1);
                   },
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -211,14 +165,13 @@ class _HomeScreenState extends State<HomeScreen> {
                       Icon(
                         Icons.settings,
                         size: 22.0,
-                        color: CustomColors.black,
+                        color: Colors.green,
                       ),
                       SizedBox(
                         height: 3,
                       ),
                       Text(
                         "Settings",
-                        style: GoogleFonts.orienta(),
                       ),
                     ],
                   ),
@@ -278,13 +231,11 @@ class _HomeScreenState extends State<HomeScreen> {
             );
           } else {
             child = Container(
-              child: ListView.separated(
+              padding: EdgeInsets.all(8.0),
+              child: ListView.builder(
                 shrinkWrap: true,
                 primary: false,
                 itemCount: snapshot.data.docs.length,
-                separatorBuilder: (BuildContext context, int index) => Divider(
-                  color: CustomColors.black,
-                ),
                 itemBuilder: (BuildContext context, int index) {
                   Products _p =
                       Products.fromJson(snapshot.data.docs[index].data());
@@ -292,7 +243,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   return Slidable(
                     actionPane: SlidableDrawerActionPane(),
                     actionExtentRatio: 0.20,
-                    child: _getProductBody(_p),
+                    child: StoreTile(product: _p),
                     actions: <Widget>[
                       IconSlideAction(
                         caption: 'Edit',
@@ -334,58 +285,100 @@ class _HomeScreenState extends State<HomeScreen> {
       },
     );
   }
+}
 
-  Widget _getProductBody(Products _p) {
-    return Container(
-      padding: EdgeInsets.fromLTRB(15, 5, 10, 5),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Flexible(
-            child: Text(
-              _p.name,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                  color: CustomColors.black,
-                  fontSize: 14.0,
-                  fontWeight: FontWeight.bold),
+class StoreTile extends StatelessWidget {
+  final Products product;
+
+  const StoreTile({Key key, this.product}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: null,
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.white.withOpacity(0.5),
+              spreadRadius: 1,
+              blurRadius: 1,
+              offset: Offset(1, 1),
             ),
-          ),
-          SizedBox(height: 2.0),
-          _p.businessName.isNotEmpty
-              ? Row(
-                children: [
-                  SizedBox(width: 5.0),
-                  Text(
-                      _p.businessName ?? "",
+          ],
+        ),
+        child: ListTile(
+            title: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    SvgPicture.asset(
+                      'images/store.svg',
+                      height: 35.0,
+                      width: 35.0,
+                      allowDrawingOutsideViewBox: true,
+                    ),
+                    SizedBox(width: 22),
+                    Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Column(
+                                children: [
+                                  SizedBox(
+                                    width: MediaQuery.of(context).size.width *
+                                        0.35,
+                                    child: Text(product.name,
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16.0,
+                                        )),
+                                  ),
+                                  SizedBox(height: 7),
+                                  SizedBox(
+                                    width: MediaQuery.of(context).size.width *
+                                        0.35,
+                                    child: Text(product.businessName,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                          fontSize: 12.0,
+                                        )),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ]),
+                  ],
+                ),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.20,
+                  child: Text(product.quantity.toString(),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
-                        color: CustomColors.black,
+                        color: Colors.grey,
                         fontSize: 12.0,
-                      ),
-                    ),
-                ],
-              )
-              : Container(),
-          Row(
-            children: [
-              SizedBox(width: 5.0),
-              Text(
-                'Quantity :  ${_p.quantity}',
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  color: CustomColors.black,
-                  fontSize: 12.0,
+                      )),
                 ),
-              ),
-            ],
-          ),
-        ],
+              ],
+            ),
+            SizedBox(height: 10),
+            Divider(
+              height: 1,
+            )
+          ],
+        )),
       ),
     );
   }
