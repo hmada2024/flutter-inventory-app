@@ -99,8 +99,7 @@ class _AddProductState extends State<AddProduct> {
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 10.0),
                                   decoration: BoxDecoration(
-                                      borderRadius:
-                                          BorderRadius.circular(10.0),
+                                      borderRadius: BorderRadius.circular(10.0),
                                       border: Border.all()),
                                   child: DropdownButtonHideUnderline(
                                     child: DropdownButton<String>(
@@ -127,8 +126,7 @@ class _AddProductState extends State<AddProduct> {
                               ),
                             ),
                             Container(
-                              margin:
-                                  const EdgeInsets.only(top: 5, bottom: 5),
+                              margin: const EdgeInsets.only(top: 5, bottom: 5),
                               child: TextFormField(
                                 decoration: InputDecoration(
                                     border: OutlineInputBorder(
@@ -152,8 +150,7 @@ class _AddProductState extends State<AddProduct> {
                               ),
                             ),
                             Container(
-                              margin:
-                                  const EdgeInsets.only(top: 5, bottom: 5),
+                              margin: const EdgeInsets.only(top: 5, bottom: 5),
                               child: TextFormField(
                                 decoration: InputDecoration(
                                     border: OutlineInputBorder(
@@ -177,8 +174,7 @@ class _AddProductState extends State<AddProduct> {
                               ),
                             ),
                             Container(
-                              margin:
-                                  const EdgeInsets.only(top: 5, bottom: 5),
+                              margin: const EdgeInsets.only(top: 5, bottom: 5),
                               child: TextFormField(
                                 decoration: InputDecoration(
                                     border: OutlineInputBorder(
@@ -201,8 +197,9 @@ class _AddProductState extends State<AddProduct> {
                                 },
                               ),
                             ),
+                            SizedBox(height: 20),
                             ElevatedButton(
-                              child: Text('Create'),
+                              child: Text('Add Product'),
                               onPressed: () async {
                                 await _submit();
                               },

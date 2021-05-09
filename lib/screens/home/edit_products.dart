@@ -173,6 +173,7 @@ class _EditProductState extends State<EditProduct> {
                                 },
                               ),
                             ),
+                            SizedBox(height: 20),
                             ElevatedButton(
                               child: Text('Update'),
                               onPressed: () async {
