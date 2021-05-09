@@ -259,6 +259,36 @@ class HomeContent extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            TextFormField(
+              // onChanged: (text) {
+              //   setState(() {
+              //     searchString = text;
+              //     myFuture = this._getRestaurants();
+              //   });
+              // },
+              autocorrect: true,
+              decoration: InputDecoration(
+                hintText: 'Search Product..',
+                prefixIcon: Icon(Icons.search),
+                // hintStyle: styles.ThemeText.baseFontGreyStyle,
+                filled: true,
+                fillColor: Colors.grey[200],
+                //   contentPadding: const EdgeInsets.symmetric(vertical: 8.0,horizontal: 19),
+                //   contentPadding: const EdgeInsets.all(16.0),
+                contentPadding: const EdgeInsets.all(5.0),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                  borderSide: BorderSide(color: Color(0xFFC1C1C1), width: 1),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                  borderSide: BorderSide(color: Color(0xFFC1C1C1), width: 1),
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 20,
+            ),
             StoreTile(
               name: 'Rice',
               desc: 'description',
