@@ -257,7 +257,8 @@ class _HomeScreenState extends State<HomeScreen> {
                               context: context,
                               barrierDismissible: true,
                               builder: (BuildContext context) {
-                                return EditProduct(_p);
+                                return SingleChildScrollView(
+                                    child: EditProduct(_p));
                               });
                         },
                       ),
