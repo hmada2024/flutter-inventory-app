@@ -17,9 +17,9 @@ class AddBusinessWidget extends StatelessWidget {
           width: 175,
           height: 50,
           decoration: const BoxDecoration(
-            color: CustomColors.alertRed,
+            color: Colors.redAccent,
             borderRadius: BorderRadius.all(
-              Radius.circular(8.0),
+              Radius.circular(10.0),
             ),
           ),
           child: Row(
@@ -31,7 +31,7 @@ class AddBusinessWidget extends StatelessWidget {
                 size: 30,
               ),
               Text(
-                "Add New Business",
+                "Add New Store",
                 style: TextStyle(color: CustomColors.white, fontSize: 14),
               ),
             ],

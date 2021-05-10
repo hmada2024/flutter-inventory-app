@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:greenland_stock/db/business.dart';
+import 'package:greenland_stock/screens/app/appBar.dart';
 import 'package:greenland_stock/screens/utils/AddBusinessWidget.dart';
 import 'package:greenland_stock/screens/utils/AsyncWidgets.dart';
 import 'package:greenland_stock/screens/utils/CustomColors.dart';
@@ -10,21 +12,7 @@ class BusinessSettings extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          "Store Settings",
-          textAlign: TextAlign.start,
-          style: TextStyle(color: CustomColors.black, fontSize: 16),
-        ),
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back_ios,
-            color: CustomColors.black,
-          ),
-          onPressed: () => Navigator.pop(context),
-        ),
-        backgroundColor: CustomColors.green,
-      ),
+      appBar: appBar(context),
       floatingActionButton: AddBusinessWidget(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       body: SingleChildScrollView(
@@ -134,32 +122,44 @@ class BusinessSettings extends StatelessWidget {
       elevation: 5,
       child: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Flexible(
-              child: Text(
-                store.name,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  color: CustomColors.black,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 14.0,
-                ),
-              ),
+        child: Row(
+          children: [
+            SizedBox(width: 5),
+            SvgPicture.asset(
+              'images/store.svg',
+              height: 35.0,
+              width: 35.0,
+              allowDrawingOutsideViewBox: true,
             ),
-            SizedBox(height: 5.0),
-            Row(
-              children: [
-                SizedBox(width: 5.0),
-                Text(
-                  "Owner: ${store.ownedBy}",
-                  style: TextStyle(
-                    color: CustomColors.black,
-                    fontSize: 12.0,
+            SizedBox(width: 15),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Flexible(
+                  child: Text(
+                    store.name,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: CustomColors.black,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14.0,
+                    ),
                   ),
+                ),
+                SizedBox(height: 5.0),
+                Row(
+                  children: [
+                    SizedBox(width: 5.0),
+                    Text(
+                      "Owner : ${store.ownedBy}",
+                      style: TextStyle(
+                        color: CustomColors.black,
+                        fontSize: 12.0,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
