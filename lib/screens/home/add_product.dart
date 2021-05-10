@@ -37,6 +37,7 @@ class _AddProductState extends State<AddProduct> {
       stores.forEach(
         (b) {
           storeList[b.uuid] = b.name;
+          _selectedStore = b.uuid;
         },
       );
 
