@@ -6,6 +6,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:greenland_stock/constants.dart';
 import 'package:greenland_stock/db/products.dart';
 import 'package:greenland_stock/screens/app/appBar.dart';
+import 'package:greenland_stock/screens/home/edit_products.dart';
 import 'package:greenland_stock/screens/settings/SettingsHome.dart';
 import 'package:greenland_stock/screens/utils/AsyncWidgets.dart';
 import 'package:greenland_stock/screens/utils/CustomColors.dart';
@@ -56,6 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
       onWillPop: onWillPop,
       child: Scaffold(
         appBar: appBar(context),
+        resizeToAvoidBottomInset: false,
         backgroundColor: CustomColors.lightGrey,
         floatingActionButton: _selectedIndex == 0
             ? FloatingActionButton(
@@ -250,9 +252,14 @@ class _HomeScreenState extends State<HomeScreen> {
                         caption: 'Edit',
                         color: Colors.indigo,
                         icon: Icons.edit,
-                        onTap: () => Navigator.pushNamed(
-                            context, editProductRoute,
-                            arguments: _p),
+                        onTap: () {
+                          showDialog(
+                              context: context,
+                              barrierDismissible: true,
+                              builder: (BuildContext context) {
+                                return EditProduct(_p);
+                              });
+                        },
                       ),
                     ],
                     secondaryActions: <Widget>[
@@ -269,19 +276,23 @@ class _HomeScreenState extends State<HomeScreen> {
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.all(
                                           Radius.circular(15.0))),
-                                  title: new Text(
-                                    "GreenLand Stock",
+                                  title: Text(
+                                    "${_p.name}",
                                     textAlign: TextAlign.center,
                                   ),
-                                  content: new Text(
-                                    "Do you want to remove the product",
+                                  content: Text(
+                                    "Do you want to remove this product?",
                                     style: TextStyle(
                                         color: Colors.grey, height: 1.5),
                                   ),
                                   actions: <Widget>[
                                     // usually buttons at the bottom of the dialog
-                                    new FlatButton(
-                                      color: Colors.green,
+                                    TextButton(
+                                      style: ButtonStyle(
+                                        backgroundColor:
+                                            MaterialStateProperty.all<Color>(
+                                                Colors.green),
+                                      ),
                                       onPressed: () {
                                         Navigator.pop(context);
                                       },
@@ -290,8 +301,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                         style: TextStyle(color: Colors.white),
                                       ),
                                     ),
-                                    new FlatButton(
-                                      color: Colors.green,
+                                    TextButton(
+                                      style: ButtonStyle(
+                                        backgroundColor:
+                                            MaterialStateProperty.all<Color>(
+                                                Colors.redAccent),
+                                      ),
                                       onPressed: () async {
                                         await _p.remove();
                                         Navigator.pop(context);
@@ -305,11 +320,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 );
                               },
                             );
-                          }
-                          // async {
-                          //   await _p.remove();
-                          // }
-                          ),
+                          }),
                     ],
                   );
                 },
