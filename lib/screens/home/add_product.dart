@@ -162,7 +162,7 @@ class _AddProductState extends State<AddProduct> {
                                           color: Colors.grey, width: 2.0),
                                     ),
                                     labelText: 'Quantity',
-                                    hintText: 'Available Quantity'),
+                                    hintText: 'Current Quantity '),
                                 validator: (quantity) {
                                   if (quantity.isEmpty) {
                                     qty = double.parse('0');
@@ -185,7 +185,7 @@ class _AddProductState extends State<AddProduct> {
                                       borderSide: const BorderSide(
                                           color: Colors.grey, width: 2.0),
                                     ),
-                                    labelText: 'Min Quantity',
+                                    labelText: 'Alert Quantity',
                                     hintText: 'Alert Quantity'),
                                 validator: (quantity) {
                                   if (quantity.isEmpty) {
