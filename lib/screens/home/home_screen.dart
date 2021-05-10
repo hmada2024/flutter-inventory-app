@@ -353,6 +353,8 @@ class StoreTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isLow = product.quantity < product.minQuantity;
+
     return GestureDetector(
       onTap: null,
       child: Container(
@@ -360,7 +362,9 @@ class StoreTile extends StatelessWidget {
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
-              color: Colors.white.withOpacity(0.5),
+              color: isLow
+                  ? Colors.redAccent.withOpacity(0.5)
+                  : Colors.white.withOpacity(0.5),
               spreadRadius: 1,
               blurRadius: 1,
               offset: Offset(1, 1),
@@ -426,7 +430,7 @@ class StoreTile extends StatelessWidget {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
-                        color: Colors.grey,
+                        color: isLow ? Colors.white : Colors.grey,
                         fontSize: 12.0,
                       )),
                 ),

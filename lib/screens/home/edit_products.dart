@@ -178,14 +178,8 @@ class _EditProductState extends State<EditProduct> {
             this.pName.split(" ").map((e) => e.toLowerCase()).toList();
 
         // CustomDialogs.actionWaiting(context);
-        if (qty > minQty) {
-          await _p.update(_p.toJson());
-          Navigator.pop(context);
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-              CustomSnackBar.errorSnackBar(
-                  "Quantity should greater than alert quantity", 2));
-        }
+        await _p.update(_p.toJson());
+        Navigator.pop(context);
 
         // Navigator.pop(context);
       } else {
