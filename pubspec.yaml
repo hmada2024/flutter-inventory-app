@@ -71,6 +71,7 @@ flutter:
     - images/on1.svg
     - images/on2.svg
     - images/on3.svg
+    - images/GreenlandLogo.png
   
   fonts:
     - family: OLED
