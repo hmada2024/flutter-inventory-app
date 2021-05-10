@@ -28,15 +28,12 @@ Future<void> main() async {
         seconds: 3,
         navigateAfterSeconds: MyApp(isOpened, userID, userName, userImage),
         loaderColor: Colors.white,
-        title: new Text(
-          "GreenLand stock",
-          textAlign: TextAlign.center,
-          style: new TextStyle(
-            fontSize: 30.0,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
+        image: new Image.asset(
+          "images/GreenlandLogo.png",
+          height: 600.0,
+          width: 600.0,
         ),
+        photoSize: 100.0,
         backgroundColor: Colors.green,
       )));
 }
