@@ -31,7 +31,7 @@ class _AddBusinessState extends State<AddBusiness> {
       key: _scaffoldKey,
       appBar: AppBar(
         backgroundColor: Colors.green,
-        title: Text("Add Business"),
+        title: Text("Add Store"),
         leading: InkWell(
           child: Icon(Icons.arrow_back_ios),
           onTap: () {
@@ -77,7 +77,7 @@ class _AddBusinessState extends State<AddBusiness> {
                                           color: Colors.grey, width: 2.0),
                                     ),
                                     labelText: 'Name',
-                                    hintText: 'Enter your Business name'),
+                                    hintText: 'Enter your Store name'),
                                 validator: (name) {
                                   if (name.isEmpty) {
                                     return "Must not be empty";
