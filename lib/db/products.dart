@@ -1,6 +1,8 @@
 import 'package:greenland_stock/db/model.dart';
+import 'package:greenland_stock/services/user_service.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:rxdart/rxdart.dart';
 
 part 'products.g.dart';
 
@@ -61,14 +63,24 @@ class Products extends Model {
   }
 
   Stream<QuerySnapshot> streamAllProducts() {
-    return getCollectionRef().snapshots();
+    return getCollectionRef()
+        .where('business_id', whereIn: cachedLocalUser.business)
+        .snapshots();
   }
 
   Stream<QuerySnapshot> searchByKeys(String key) {
     List<String> keys = key.split(" ").map((e) => e.toLowerCase()).toList();
-    return getCollectionRef()
-        .where('search_keys', arrayContainsAny: keys)
-        .snapshots();
+
+    List<Stream<QuerySnapshot>> streams = [];
+
+    for (var i = 0; i < cachedLocalUser.business.length; i++) {
+      streams.add(getCollectionRef()
+          .where('business_id', isEqualTo: cachedLocalUser.business[i])
+          .where('search_keys', arrayContainsAny: keys)
+          .snapshots());
+    }
+
+    return ConcatStream(streams);
   }
 
   Future<void> remove() async {

@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_svg/svg.dart';
@@ -22,7 +21,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   TextEditingController _searchController = TextEditingController();
 
-  Stream<QuerySnapshot> _pStream;
+  var _pStream;
 
   int backPressCounter = 0;
   int _selectedIndex = 0;
@@ -203,7 +202,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _getProducts() {
     return StreamBuilder(
       stream: _pStream,
-      builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+      builder: (context, snapshot) {
         Widget child;
 
         if (snapshot.hasData) {
@@ -266,7 +265,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 0.20,
                                       ),
                                       SingleChildScrollView(
-                                          child: EditProduct(_p)),
+                                        child: EditProduct(_p),
+                                      ),
                                     ],
                                   ),
                                 );

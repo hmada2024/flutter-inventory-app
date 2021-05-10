@@ -81,7 +81,17 @@ class Business extends Model {
       this.searchKeys =
           this.name.split(" ").map((e) => e.toLowerCase()).toList();
 
-      await docRef.set(this.toJson());
+      WriteBatch bWrite = Model.db.batch();
+      bWrite.set(docRef, this.toJson());
+
+      cachedLocalUser.business == null
+          ? cachedLocalUser.business = [this.uuid]
+          : cachedLocalUser.business.add(this.uuid);
+      bWrite.update(
+          cachedLocalUser.getDocumentReference(cachedLocalUser.getID()),
+          {'business': cachedLocalUser.business});
+
+      await bWrite.commit();
     } catch (err) {
       throw err;
     }
