@@ -255,10 +255,21 @@ class _HomeScreenState extends State<HomeScreen> {
                         onTap: () {
                           showDialog(
                               context: context,
-                              barrierDismissible: true,
+                              // barrierDismissible: true,
                               builder: (BuildContext context) {
                                 return SingleChildScrollView(
-                                    child: EditProduct(_p));
+                                  child: Column(
+                                    children: [
+                                      SizedBox(
+                                        height:
+                                            MediaQuery.of(context).size.height *
+                                                0.20,
+                                      ),
+                                      SingleChildScrollView(
+                                          child: EditProduct(_p)),
+                                    ],
+                                  ),
+                                );
                               });
                         },
                       ),
