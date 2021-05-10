@@ -12,7 +12,7 @@ class BusinessSettings extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Business Settings",
+          "Store Settings",
           textAlign: TextAlign.start,
           style: TextStyle(color: CustomColors.black, fontSize: 16),
         ),
