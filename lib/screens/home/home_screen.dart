@@ -260,9 +260,56 @@ class _HomeScreenState extends State<HomeScreen> {
                           caption: 'Remove',
                           color: Colors.red[400],
                           icon: Icons.delete_forever,
-                          onTap: () async {
-                            await _p.remove();
-                          }),
+                          onTap: () {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                // return object of type Dialog
+                                return AlertDialog(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(15.0))),
+                                  title: new Text(
+                                    "GreenLand Stock",
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  content: new Text(
+                                    "Do you want to remove the product",
+                                    style: TextStyle(
+                                        color: Colors.grey, height: 1.5),
+                                  ),
+                                  actions: <Widget>[
+                                    // usually buttons at the bottom of the dialog
+                                    new FlatButton(
+                                      color: Colors.green,
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      child: Text(
+                                        "Cancel",
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                    ),
+                                    new FlatButton(
+                                      color: Colors.green,
+                                      onPressed: () async {
+                                        await _p.remove();
+                                        Navigator.pop(context);
+                                      },
+                                      child: Text(
+                                        "Remove",
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          }
+                          // async {
+                          //   await _p.remove();
+                          // }
+                          ),
                     ],
                   );
                 },
