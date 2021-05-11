@@ -68,7 +68,7 @@ class Products extends Model {
         .snapshots();
   }
 
-  Stream<QuerySnapshot> searchByKeys(String key) {
+  CombineLatestStream<QuerySnapshot<Object>, List<QuerySnapshot<Object>>> searchByKeys(String key) {
     List<String> keys = key.split(" ").map((e) => e.toLowerCase()).toList();
 
     List<Stream<QuerySnapshot>> streams = [];
@@ -80,7 +80,7 @@ class Products extends Model {
           .snapshots());
     }
 
-    return ConcatStream(streams);
+    return CombineLatestStream.list(streams);
   }
 
   Future<void> remove() async {

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_svg/svg.dart';
@@ -21,8 +22,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   TextEditingController _searchController = TextEditingController();
 
-  var _pStream;
-
   int backPressCounter = 0;
   int _selectedIndex = 0;
 
@@ -33,8 +32,6 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     _selectedIndex = widget.index;
     isSearchTriggered = false;
-
-    _pStream = Products().streamAllProducts();
   }
 
   void _onItemTapped(int index) {
@@ -44,9 +41,8 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _submit(String key) {
-    isSearchTriggered = true;
     setState(() {
-      _pStream = Products().searchByKeys(key);
+      isSearchTriggered = true;
     });
   }
 
@@ -93,10 +89,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                   onTap: () {
                                     if (isSearchTriggered) {
                                       _searchController.text = '';
-                                      isSearchTriggered = false;
                                       setState(() {
-                                        _pStream =
-                                            Products().streamAllProducts();
+                                        isSearchTriggered = false;
                                       });
                                     }
                                   },
@@ -121,7 +115,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                     ),
-                    _getProducts(),
+                    !isSearchTriggered ? _getProducts() : _getSearchProducts(),
                   ]),
                 )
               : SettingsHome(),
@@ -135,7 +129,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 width: MediaQuery.of(context).size.width * 0.50,
                 child: InkWell(
                   onTap: () {
-                    _pStream = Products().streamAllProducts();
                     _searchController.text = '';
                     isSearchTriggered = false;
                     _onItemTapped(0);
@@ -201,7 +194,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _getProducts() {
     return StreamBuilder(
-      stream: _pStream,
+      stream: Products().streamAllProducts(),
       builder: (context, snapshot) {
         Widget child;
 
@@ -234,107 +227,170 @@ class _HomeScreenState extends State<HomeScreen> {
           } else {
             child = Container(
               padding: EdgeInsets.all(8.0),
+              child: _productsList(snapshot.data.docs),
+            );
+          }
+        } else if (snapshot.hasError) {
+          child = Center(
+            child: Column(
+              children: AsyncWidgets.asyncError(),
+            ),
+          );
+        } else {
+          child = Center(
+            child: Column(
+              children: AsyncWidgets.asyncWaiting(),
+            ),
+          );
+        }
+        return child;
+      },
+    );
+  }
+
+  Widget _productsList(List<QueryDocumentSnapshot> docs) {
+    return ListView.builder(
+      shrinkWrap: true,
+      primary: false,
+      itemCount: docs.length,
+      itemBuilder: (BuildContext context, int index) {
+        Products _p = Products.fromJson(docs[index].data());
+
+        return Slidable(
+          actionPane: SlidableDrawerActionPane(),
+          actionExtentRatio: 0.20,
+          child: StoreTile(product: _p),
+          actions: <Widget>[
+            IconSlideAction(
+              caption: 'Edit',
+              color: Colors.indigo,
+              icon: Icons.edit,
+              onTap: () {
+                showDialog(
+                    context: context,
+                    // barrierDismissible: true,
+                    builder: (BuildContext context) {
+                      return SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            SizedBox(
+                              height: MediaQuery.of(context).size.height * 0.20,
+                            ),
+                            SingleChildScrollView(
+                              child: EditProduct(_p),
+                            ),
+                          ],
+                        ),
+                      );
+                    });
+              },
+            ),
+          ],
+          secondaryActions: <Widget>[
+            IconSlideAction(
+                caption: 'Remove',
+                color: Colors.red[400],
+                icon: Icons.delete_forever,
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      // return object of type Dialog
+                      return AlertDialog(
+                        shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(15.0))),
+                        title: Text(
+                          "${_p.name}",
+                          textAlign: TextAlign.center,
+                        ),
+                        content: Text(
+                          "Do you want to remove this product?",
+                          style: TextStyle(color: Colors.grey, height: 1.5),
+                        ),
+                        actions: <Widget>[
+                          // usually buttons at the bottom of the dialog
+                          TextButton(
+                            style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all<Color>(
+                                  Colors.green),
+                            ),
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: Text(
+                              "Cancel",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                          TextButton(
+                            style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all<Color>(
+                                  Colors.redAccent),
+                            ),
+                            onPressed: () async {
+                              await _p.remove();
+                              Navigator.pop(context);
+                            },
+                            child: Text(
+                              "Remove",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                }),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _getSearchProducts() {
+    return StreamBuilder(
+      stream: Products().searchByKeys(_searchController.text),
+      builder: (context, snapshot) {
+        Widget child;
+
+        if (snapshot.hasData) {
+          if (snapshot.data.length == 0) {
+            child = Container(
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.sentiment_neutral,
+                      size: 40,
+                      color: CustomColors.black,
+                    ),
+                    SizedBox(height: 20),
+                    Text(
+                      "No Products Found!",
+                      style: TextStyle(
+                        color: CustomColors.alertRed,
+                        fontSize: 16,
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                  ],
+                ),
+              ),
+            );
+          } else {
+            child = Container(
+              padding: EdgeInsets.all(8.0),
               child: ListView.builder(
                 shrinkWrap: true,
                 primary: false,
-                itemCount: snapshot.data.docs.length,
+                itemCount: snapshot.data.length,
                 itemBuilder: (BuildContext context, int index) {
-                  Products _p =
-                      Products.fromJson(snapshot.data.docs[index].data());
+                  print(snapshot.data[index].docs);
 
-                  return Slidable(
-                    actionPane: SlidableDrawerActionPane(),
-                    actionExtentRatio: 0.20,
-                    child: StoreTile(product: _p),
-                    actions: <Widget>[
-                      IconSlideAction(
-                        caption: 'Edit',
-                        color: Colors.indigo,
-                        icon: Icons.edit,
-                        onTap: () {
-                          showDialog(
-                              context: context,
-                              // barrierDismissible: true,
-                              builder: (BuildContext context) {
-                                return SingleChildScrollView(
-                                  child: Column(
-                                    children: [
-                                      SizedBox(
-                                        height:
-                                            MediaQuery.of(context).size.height *
-                                                0.20,
-                                      ),
-                                      SingleChildScrollView(
-                                        child: EditProduct(_p),
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              });
-                        },
-                      ),
-                    ],
-                    secondaryActions: <Widget>[
-                      IconSlideAction(
-                          caption: 'Remove',
-                          color: Colors.red[400],
-                          icon: Icons.delete_forever,
-                          onTap: () {
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                // return object of type Dialog
-                                return AlertDialog(
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(15.0))),
-                                  title: Text(
-                                    "${_p.name}",
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  content: Text(
-                                    "Do you want to remove this product?",
-                                    style: TextStyle(
-                                        color: Colors.grey, height: 1.5),
-                                  ),
-                                  actions: <Widget>[
-                                    // usually buttons at the bottom of the dialog
-                                    TextButton(
-                                      style: ButtonStyle(
-                                        backgroundColor:
-                                            MaterialStateProperty.all<Color>(
-                                                Colors.green),
-                                      ),
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                      },
-                                      child: Text(
-                                        "Cancel",
-                                        style: TextStyle(color: Colors.white),
-                                      ),
-                                    ),
-                                    TextButton(
-                                      style: ButtonStyle(
-                                        backgroundColor:
-                                            MaterialStateProperty.all<Color>(
-                                                Colors.redAccent),
-                                      ),
-                                      onPressed: () async {
-                                        await _p.remove();
-                                        Navigator.pop(context);
-                                      },
-                                      child: Text(
-                                        "Remove",
-                                        style: TextStyle(color: Colors.white),
-                                      ),
-                                    ),
-                                  ],
-                                );
-                              },
-                            );
-                          }),
-                    ],
-                  );
+                  return _productsList(snapshot.data[index].docs);
                 },
               ),
             );
