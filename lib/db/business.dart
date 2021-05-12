@@ -1,3 +1,4 @@
+import 'package:greenland_stock/constants.dart';
 import 'package:greenland_stock/db/model.dart';
 import 'package:greenland_stock/services/user_service.dart';
 import 'package:greenland_stock/db/address.dart';
@@ -8,7 +9,8 @@ part 'business.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class Business extends Model {
-  static CollectionReference _bCollRef = Model.db.collection("business");
+  static CollectionReference _bCollRef =
+      Model.db.collection(is_prod_env ? "business" : "test_business");
 
   @JsonKey(name: 'uuid')
   String uuid;

@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:greenland_stock/db/business.dart';
 import 'package:greenland_stock/db/products.dart';
 import 'package:greenland_stock/screens/utils/CustomColors.dart';
-import 'package:greenland_stock/screens/utils/CustomDialogs.dart';
 import 'package:greenland_stock/screens/utils/CustomSnackBar.dart';
 
 class AddProduct extends StatefulWidget {
@@ -240,10 +240,10 @@ class _AddProductState extends State<AddProduct> {
         _p.businessID = _selectedStore;
         _p.businessName = _stores[_selectedStore];
 
-        // CustomDialogs.actionWaiting(context);
+        EasyLoading.show(status: 'loading...');
         await _p.create();
+        EasyLoading.dismiss();
         Navigator.pop(context);
-        // Navigator.pop(context);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
             CustomSnackBar.errorSnackBar("Fill Required fields", 2));

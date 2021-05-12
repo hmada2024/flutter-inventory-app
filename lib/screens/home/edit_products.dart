@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:greenland_stock/db/products.dart';
 import 'package:greenland_stock/screens/utils/CustomColors.dart';
-import 'package:greenland_stock/screens/utils/CustomDialogs.dart';
 import 'package:greenland_stock/screens/utils/CustomSnackBar.dart';
 
 class EditProduct extends StatefulWidget {
@@ -169,6 +169,13 @@ class _EditProductState extends State<EditProduct> {
       final FormState form = _formKey.currentState;
 
       if (form.validate()) {
+        double change = this.qty - widget.product.quantity;
+
+        int type = change > 0
+            ? 1
+            : change < 0
+                ? 2
+                : 0;
         Products _p = widget.product;
 
         _p.name = this.pName;
@@ -177,11 +184,10 @@ class _EditProductState extends State<EditProduct> {
         _p.searchKeys =
             this.pName.split(" ").map((e) => e.toLowerCase()).toList();
 
-        // CustomDialogs.actionWaiting(context);
-        await _p.update(_p.toJson());
+        EasyLoading.show(status: 'loading...');
+        await _p.updateProduct(type, change);
+        EasyLoading.dismiss();
         Navigator.pop(context);
-
-        // Navigator.pop(context);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
             CustomSnackBar.errorSnackBar("Fill Required fields", 2));

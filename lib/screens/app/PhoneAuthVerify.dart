@@ -5,9 +5,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:greenland_stock/constants.dart';
 import 'package:greenland_stock/screens/utils/CustomColors.dart';
-import 'package:greenland_stock/screens/utils/CustomDialogs.dart';
 import 'package:greenland_stock/screens/utils/CustomSnackBar.dart';
 import 'package:greenland_stock/services/auth_service.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
@@ -38,7 +38,6 @@ class _PhoneAuthVerifyState extends State<PhoneAuthVerify> {
   String currentText = "";
   StreamController<ErrorAnimationType> errorController;
 
-  final GlobalKey<State> _keyLoader = new GlobalKey<State>();
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
   final AuthService _authController = AuthService();
@@ -278,7 +277,7 @@ class _PhoneAuthVerifyState extends State<PhoneAuthVerify> {
           widget.countryCode.toString() + widget.number);
 
       if (!result['is_success']) {
-        Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+        EasyLoading.dismiss();
         ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar.errorSnackBar(
             "Unable to Login, Something went wrong. Please try again Later!",
             2));
@@ -290,13 +289,14 @@ class _PhoneAuthVerifyState extends State<PhoneAuthVerify> {
         prefs.setString(
             "mobile_number", widget.countryCode.toString() + widget.number);
 
+        EasyLoading.dismiss();
         Navigator.of(context).pushNamedAndRemoveUntil(
           homeRoute,
           (Route<dynamic> route) => false,
         );
       }
     }).catchError((error) {
-      Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+      EasyLoading.dismiss();
       ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar.errorSnackBar(
           "Something has gone wrong, please try later", 2));
     });
@@ -308,12 +308,12 @@ class _PhoneAuthVerifyState extends State<PhoneAuthVerify> {
     setState(() {
       resendSMSCount = resendSMSCount + 1;
     });
-    Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
-    // CustomDialogs.showLoadingDialog(context, _keyLoader);
+    EasyLoading.dismiss();
+    EasyLoading.show(status: 'loading...');
   }
 
   _verificationFailed(dynamic authException, BuildContext context) {
-    // Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+    EasyLoading.dismiss();
     ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar.errorSnackBar(
         "Verification Failed:" + authException.message.toString(), 2));
   }
@@ -326,7 +326,7 @@ class _PhoneAuthVerifyState extends State<PhoneAuthVerify> {
           .showSnackBar(CustomSnackBar.errorSnackBar("Invalid OTP", 2));
       errorController.add(ErrorAnimationType.shake);
     } else {
-      // CustomDialogs.showLoadingDialog(context, _keyLoader);
+      EasyLoading.show(status: 'loading...');
 
       if (kIsWeb) {
         await widget.confirmResult.confirm(currentText.trim());
@@ -353,7 +353,7 @@ class _PhoneAuthVerifyState extends State<PhoneAuthVerify> {
             widget.lastName,
             authResult.user.uid);
         if (!result['is_success']) {
-          // Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+          EasyLoading.dismiss();
           ScaffoldMessenger.of(context)
               .showSnackBar(CustomSnackBar.errorSnackBar(result['message'], 5));
         } else {
@@ -363,7 +363,7 @@ class _PhoneAuthVerifyState extends State<PhoneAuthVerify> {
         dynamic result = await _authController.signInWithMobileNumber(
             widget.countryCode.toString() + widget.number);
         if (!result['is_success']) {
-          // Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+          EasyLoading.dismiss();
           ScaffoldMessenger.of(context)
               .showSnackBar(CustomSnackBar.errorSnackBar(result['message'], 5));
         } else {
@@ -378,7 +378,7 @@ class _PhoneAuthVerifyState extends State<PhoneAuthVerify> {
         }
       }
     }).catchError((error) {
-      // Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+      EasyLoading.dismiss();
       ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar.errorSnackBar(
           "Something has gone wrong, please try later", 2));
     });
@@ -391,6 +391,7 @@ class _PhoneAuthVerifyState extends State<PhoneAuthVerify> {
     prefs.setString(
         "mobile_number", widget.countryCode.toString() + widget.number);
 
+    EasyLoading.dismiss();
     Navigator.of(context).pushNamedAndRemoveUntil(
       homeRoute,
       (Route<dynamic> route) => false,

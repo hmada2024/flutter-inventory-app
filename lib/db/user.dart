@@ -1,3 +1,4 @@
+import 'package:greenland_stock/constants.dart';
 import 'package:greenland_stock/db/model.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -6,7 +7,8 @@ part 'user.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class User extends Model {
-  static CollectionReference _userCollRef = Model.db.collection("users");
+  static CollectionReference _userCollRef =
+      Model.db.collection(is_prod_env ? "users" : "test_users");
 
   @JsonKey(name: 'guid')
   String guid;

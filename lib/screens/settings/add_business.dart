@@ -1,10 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:greenland_stock/db/address.dart';
 import 'package:greenland_stock/db/business.dart';
 import 'package:greenland_stock/screens/utils/CustomColors.dart';
-import 'package:greenland_stock/screens/utils/CustomDialogs.dart';
 import 'package:greenland_stock/screens/utils/CustomSnackBar.dart';
+import 'package:greenland_stock/services/user_service.dart';
 
 class AddBusiness extends StatefulWidget {
   @override
@@ -91,6 +92,7 @@ class _AddBusinessState extends State<AddBusiness> {
                             Container(
                               margin: const EdgeInsets.only(top: 5, bottom: 5),
                               child: TextFormField(
+                                initialValue: cachedLocalUser.getFullName(),
                                 decoration: InputDecoration(
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.all(
@@ -396,16 +398,15 @@ class _AddBusinessState extends State<AddBusiness> {
         _b.ownedBy = this.oName;
         _b.address = this.updatedAddress;
 
-        // CustomDialogs.actionWaiting(context);
+        EasyLoading.show(status: 'loading...');
         await _b.create();
+        EasyLoading.dismiss();
         Navigator.pop(context);
-        // Navigator.pop(context);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
             CustomSnackBar.errorSnackBar("Fill Required fields", 2));
       }
     } catch (err) {
-      print(err);
       ScaffoldMessenger.of(context).showSnackBar(
         CustomSnackBar.errorSnackBar("Unable to create now! Try later!", 2),
       );

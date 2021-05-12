@@ -1,11 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:greenland_stock/constants.dart';
 import 'package:greenland_stock/db/user.dart' as user;
 import 'package:flutter/services.dart';
 import 'package:greenland_stock/screens/app/PhoneAuthVerify.dart';
-import 'package:greenland_stock/screens/utils/CustomDialogs.dart';
 import 'package:greenland_stock/screens/utils/CustomSnackBar.dart';
 import 'package:greenland_stock/services/auth_service.dart';
 import 'package:greenland_stock/services/user_service.dart';
@@ -289,12 +289,12 @@ class _MobileSignInPageState extends State<MobileSignInPage> {
           "Password must have minimum 4 digits", 2));
       return;
     } else {
-      // CustomDialogs.actionWaiting(context);
+      EasyLoading.show(status: 'loading...');
       this.number = _phoneNumberController.text;
 
       var data = await user.User().getByID(countryCode.toString() + number);
       if (data != null) {
-        // Navigator.pop(context);
+        EasyLoading.dismiss();
         ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar.errorSnackBar(
             "Found an existing user for this mobile number", 2));
       } else {
@@ -332,7 +332,7 @@ class _MobileSignInPageState extends State<MobileSignInPage> {
           _lastNameController.text,
           authResult.user.uid);
       if (!result['is_success']) {
-        // Navigator.pop(context);
+        EasyLoading.dismiss();
         ScaffoldMessenger.of(context)
             .showSnackBar(CustomSnackBar.errorSnackBar(result['message'], 5));
       } else {
@@ -343,13 +343,14 @@ class _MobileSignInPageState extends State<MobileSignInPage> {
             cachedLocalUser.firstName + " " + cachedLocalUser.lastName ?? "");
         prefs.setString("mobile_number", cachedLocalUser.getID());
 
+        EasyLoading.dismiss();
         Navigator.of(context).pushNamedAndRemoveUntil(
           homeRoute,
           (Route<dynamic> route) => false,
         );
       }
     }).catchError((error) {
-      // Navigator.pop(context);
+      EasyLoading.dismiss();
       ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar.errorSnackBar(
           "Something has gone wrong, please try later", 2));
       ScaffoldMessenger.of(context)
@@ -363,12 +364,12 @@ class _MobileSignInPageState extends State<MobileSignInPage> {
 
     _smsVerificationCode = verificationId;
     _forceResendingToken = code;
-    // Navigator.pop(context);
-    // CustomDialogs.actionWaiting(context);
+    EasyLoading.dismiss();
+    EasyLoading.show(status: 'loading...');
   }
 
   _verificationFailed(dynamic authException, BuildContext context) {
-    Navigator.pop(context);
+    EasyLoading.dismiss();
     ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar.errorSnackBar(
         "Verification Failed:" + authException.message.toString(), 2));
   }

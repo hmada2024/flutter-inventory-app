@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:greenland_stock/constants.dart';
 import 'package:greenland_stock/db/user.dart';
 import 'package:greenland_stock/screens/utils/CustomColors.dart';
-import 'package:greenland_stock/screens/utils/CustomDialogs.dart';
 import 'package:greenland_stock/screens/utils/CustomSnackBar.dart';
 import 'package:greenland_stock/screens/utils/hash_generator.dart';
 import 'package:greenland_stock/services/auth_service.dart';
@@ -21,8 +21,6 @@ class AuthPage extends StatefulWidget {
 
 class _AuthPageState extends State<AuthPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-  final GlobalKey<State> _keyLoader = new GlobalKey<State>();
-
   TextEditingController _passwd = TextEditingController();
   TextEditingController _userID = TextEditingController();
   final AuthService _authController = AuthService();
@@ -302,17 +300,18 @@ class _AuthPageState extends State<AuthPage> {
   }
 
   login(String _userID) async {
-    // CustomDialogs.showLoadingDialog(context, _keyLoader);
+    EasyLoading.show(status: 'loading...');
 
     var result = await _authController.signInWithMobileNumber(_userID);
 
     if (!result['is_success']) {
-      Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+      EasyLoading.dismiss();
       ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar.errorSnackBar(
           "Unable to Login, Something went wrong. Please try again Later!", 2));
       ScaffoldMessenger.of(context)
           .showSnackBar(CustomSnackBar.errorSnackBar(result['message'], 2));
     } else {
+      EasyLoading.dismiss();
       Navigator.pushNamedAndRemoveUntil(
           context, homeRoute, (Route<dynamic> route) => false);
     }

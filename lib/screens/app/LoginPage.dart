@@ -2,10 +2,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:greenland_stock/constants.dart';
 import 'package:greenland_stock/db/user.dart' as user;
 import 'package:greenland_stock/screens/app/PhoneAuthVerify.dart';
-import 'package:greenland_stock/screens/utils/CustomDialogs.dart';
 import 'package:greenland_stock/screens/utils/CustomSnackBar.dart';
 import 'package:greenland_stock/services/auth_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -18,8 +18,6 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final GlobalKey<State> _keyLoader = new GlobalKey<State>();
-
   GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   TextEditingController _number = TextEditingController();
   AuthService _authController = AuthService();
@@ -165,10 +163,6 @@ class _LoginPageState extends State<LoginPage> {
                                         height: 36,
                                       )),
                                 ),
-                                //Text(
-                                //'(or)',
-                                //style: styles.ThemeText.defaultBtnTextBlack,
-                                //)
                               ],
                             )),
                         InkWell(
@@ -209,14 +203,14 @@ class _LoginPageState extends State<LoginPage> {
           CustomSnackBar.errorSnackBar("Enter valid Mobile Number", 2));
       return;
     } else {
-      // CustomDialogs.showLoadingDialog(context, _keyLoader);
+      EasyLoading.show(status: 'loading...');
 
       number = _number.text;
       try {
         Map<String, dynamic> _uJSON =
             await user.User().getByID(countryCode.toString() + number);
         if (_uJSON == null) {
-          // Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+          EasyLoading.dismiss();
           ScaffoldMessenger.of(context).showSnackBar(
               CustomSnackBar.errorSnackBar(
                   "No USER found for this Number, please 'SIGN UP'", 2));
@@ -226,13 +220,13 @@ class _LoginPageState extends State<LoginPage> {
           _verifyPhoneNumber();
         }
       } on PlatformException catch (err) {
-        // Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+        EasyLoading.dismiss();
         ScaffoldMessenger.of(context).showSnackBar(
           CustomSnackBar.errorSnackBar("Error while Login: " + err.message, 2),
         );
       } on Exception catch (err) {
         print(err);
-        // Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+        EasyLoading.dismiss();
         ScaffoldMessenger.of(context).showSnackBar(
           CustomSnackBar.errorSnackBar(
               "Error while Login, please try later! ", 2),
@@ -289,24 +283,23 @@ class _LoginPageState extends State<LoginPage> {
       var result = await _authController.signInWithMobileNumber(_user.getID());
 
       if (!result['is_success']) {
-        // Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+        EasyLoading.dismiss();
         ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar.errorSnackBar(
             "Unable to Login, Something went wrong. Please try again Later!",
             2));
-        ScaffoldMessenger.of(context)
-            .showSnackBar(CustomSnackBar.errorSnackBar(result['message'], 2));
       } else {
         prefs.setString("user_profile_pic", _user.getProfilePicPath());
         prefs.setString("user_name", _user.getFullName());
         prefs.setString("mobile_number", _user.getID());
 
+        EasyLoading.dismiss();
         Navigator.of(context).pushNamedAndRemoveUntil(
           homeRoute,
           (Route<dynamic> route) => false,
         );
       }
     }).catchError((error) {
-      // Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+      EasyLoading.dismiss();
       ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar.errorSnackBar(
           "Something has gone wrong, please try later", 2));
     });
@@ -318,12 +311,12 @@ class _LoginPageState extends State<LoginPage> {
 
     _smsVerificationCode = verificationId;
     _forceResendingToken = code;
-    // Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
-    // CustomDialogs.showLoadingDialog(context, _keyLoader);
+    EasyLoading.dismiss();
+    EasyLoading.show(status: 'loading...');
   }
 
   _verificationFailed(dynamic authException, BuildContext context) {
-    // Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+    EasyLoading.dismiss();
     ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar.errorSnackBar(
         "Verification Failed: " + authException.message.toString(), 2));
   }
