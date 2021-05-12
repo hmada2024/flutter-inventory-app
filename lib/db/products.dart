@@ -25,6 +25,8 @@ class Products extends Model {
   double quantity;
   @JsonKey(name: 'min_quantity', defaultValue: 1)
   double minQuantity;
+  @JsonKey(name: 'is_low', defaultValue: 1)
+  bool isLow;
   @JsonKey(name: 'search_keys', defaultValue: [""])
   List<String> searchKeys;
   @JsonKey(name: 'created_at')
@@ -56,6 +58,7 @@ class Products extends Model {
       this.createdAt = DateTime.now();
       this.updatedAt = DateTime.now();
       this.uuid = docRef.id;
+      this.isLow = isQuantityLow();
       this.searchKeys =
           this.name.split(" ").map((e) => e.toLowerCase()).toList();
 
@@ -73,7 +76,7 @@ class Products extends Model {
       _pt.createdAt = DateTime.now();
       _pt.businessID = this.businessID;
       _pt.productID = this.uuid;
-      _pt.type = 1;   // Product ADD
+      _pt.type = 1; // Product ADD
       _pt.uuid = _ptDocRef.id;
 
       bWrite.set(_ptDocRef, _pt.toJson());
@@ -83,9 +86,17 @@ class Products extends Model {
     }
   }
 
+  bool isQuantityLow() {
+    if (this.quantity < this.minQuantity)
+      return true;
+    else
+      return false;
+  }
+
   Future<void> updateProduct(int type, double change) async {
     try {
       this.updatedAt = DateTime.now();
+      this.isLow = isQuantityLow();
       DocumentReference docRef = getDocumentReference(this.uuid);
 
       WriteBatch bWrite = Model.db.batch();
@@ -102,7 +113,7 @@ class Products extends Model {
       _pt.createdAt = DateTime.now();
       _pt.businessID = this.businessID;
       _pt.productID = this.uuid;
-      _pt.type = type;   // Product ADD - 1 / SUBSTRACT - 2 / No Change - 0
+      _pt.type = type; // Product ADD - 1 / SUBSTRACT - 2 / No Change - 0
       _pt.uuid = _ptDocRef.id;
 
       bWrite.set(_ptDocRef, _pt.toJson());

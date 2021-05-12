@@ -8,6 +8,7 @@ Products _$ProductsFromJson(Map<String, dynamic> json) {
     ..businessName = json['business_name'] as String ?? ''
     ..quantity = (json['quantity'] as num)?.toDouble() ?? 0.00
     ..minQuantity = (json['min_quantity'] as num)?.toDouble() ?? 0.00
+    ..isLow = json['is_low'] as bool ?? false
     ..searchKeys = (json['search_keys'] as List)
             ?.map((e) => e == null ? null : e as String)
             ?.toList() ??
@@ -47,6 +48,7 @@ Map<String, dynamic> _$ProductsToJson(Products instance) => <String, dynamic>{
       'business_name': instance.businessName,
       'quantity': instance.quantity ?? 0.00,
       'min_quantity': instance.minQuantity ?? 0.00,
+      'is_low': instance.isLow,
       'search_keys': instance.searchKeys == null ? [] : instance.searchKeys,
       'created_at': instance.createdAt,
       'updated_at': instance.updatedAt,
