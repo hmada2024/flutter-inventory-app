@@ -257,7 +257,7 @@ List<SliderModel> getSlides() {
 
   //1
   sliderModel.setDesc(
-      "- Lorem Ipsum is simply dummy text of the printing and typesetting industry");
+      "- Record Raw Material consumption & Track usage");
   sliderModel.setTitle("stock Management");
   sliderModel.setImageAssetPath("images/on1.svg");
 
@@ -267,7 +267,7 @@ List<SliderModel> getSlides() {
 
   //2
   sliderModel.setDesc(
-      "- Lorem Ipsum is simply dummy text of the printing and typesetting industry");
+      "- Access your stock details Anywhere & Anytime");
   sliderModel.setTitle("access anytime");
   sliderModel.setImageAssetPath("images/on2.svg");
   slides.add(sliderModel);
@@ -276,7 +276,7 @@ List<SliderModel> getSlides() {
 
   //3
   sliderModel.setDesc(
-      "- Lorem Ipsum is simply dummy text of the printing and typesetting industry");
+      "- Get instant alerts on low stock materials, etc");
   sliderModel.setTitle("Alert on low stock");
   sliderModel.setImageAssetPath("images/on3.svg");
   slides.add(sliderModel);
