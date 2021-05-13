@@ -180,8 +180,8 @@ class _BusinessSettingsState extends State<BusinessSettings> {
                         },
                         child: Text(
                           cachedLocalUser.primaryBusiness == store.uuid
-                              ? "PRIMARY"
-                              : "Set PRIMARY",
+                              ? "Primary Store"
+                              : "Set As Primary",
                           style: TextStyle(
                             color: cachedLocalUser.primaryBusiness == store.uuid
                                 ? Colors.green
