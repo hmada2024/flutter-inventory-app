@@ -86,12 +86,17 @@ class Business extends Model {
       WriteBatch bWrite = Model.db.batch();
       bWrite.set(docRef, this.toJson());
 
-      cachedLocalUser.business == null
-          ? cachedLocalUser.business = [this.uuid]
-          : cachedLocalUser.business.add(this.uuid);
+      if (cachedLocalUser.business == null) {
+        cachedLocalUser.business = [this.uuid];
+        cachedLocalUser.primaryBusiness = this.uuid;
+      } else
+        cachedLocalUser.business.add(this.uuid);
+        
       bWrite.update(
-          cachedLocalUser.getDocumentReference(cachedLocalUser.getID()),
-          {'business': cachedLocalUser.business});
+          cachedLocalUser.getDocumentReference(cachedLocalUser.getID()), {
+        'business': cachedLocalUser.business,
+        'primary_business': cachedLocalUser.primaryBusiness
+      });
 
       await bWrite.commit();
     } catch (err) {

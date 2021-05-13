@@ -5,6 +5,7 @@ import 'package:greenland_stock/db/business.dart';
 import 'package:greenland_stock/db/products.dart';
 import 'package:greenland_stock/screens/utils/CustomColors.dart';
 import 'package:greenland_stock/screens/utils/CustomSnackBar.dart';
+import 'package:greenland_stock/services/user_service.dart';
 
 class AddProduct extends StatefulWidget {
   @override
@@ -37,7 +38,9 @@ class _AddProductState extends State<AddProduct> {
       stores.forEach(
         (b) {
           storeList[b.uuid] = b.name;
-          _selectedStore = b.uuid;
+
+          if (b.uuid == cachedLocalUser.primaryBusiness)
+            _selectedStore = b.uuid;
         },
       );
 
@@ -234,7 +237,7 @@ class _AddProductState extends State<AddProduct> {
       if (form.validate()) {
         Products _p = Products();
 
-        _p.name = this.pName;
+        _p.name = this.pName.trim();
         _p.quantity = this.qty;
         _p.minQuantity = this.minQty;
         _p.businessID = _selectedStore;

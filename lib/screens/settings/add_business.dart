@@ -394,8 +394,8 @@ class _AddBusinessState extends State<AddBusiness> {
       if (form.validate()) {
         Business _b = Business();
 
-        _b.name = this.sName;
-        _b.ownedBy = this.oName;
+        _b.name = this.sName.trim();
+        _b.ownedBy = this.oName.trim();
         _b.address = this.updatedAddress;
 
         EasyLoading.show(status: 'loading...');

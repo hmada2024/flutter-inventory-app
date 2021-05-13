@@ -39,6 +39,12 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   @override
+  void deactivate() {
+    EasyLoading.dismiss();
+    super.deactivate();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
@@ -323,6 +329,7 @@ class _LoginPageState extends State<LoginPage> {
 
   _codeAutoRetrievalTimeout(String verificationId) {
     _smsVerificationCode = verificationId;
+    EasyLoading.dismiss();
 
     Navigator.of(context).push(
       MaterialPageRoute(

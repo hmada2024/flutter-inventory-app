@@ -7,8 +7,14 @@ import 'package:greenland_stock/screens/app/appBar.dart';
 import 'package:greenland_stock/screens/utils/AddBusinessWidget.dart';
 import 'package:greenland_stock/screens/utils/AsyncWidgets.dart';
 import 'package:greenland_stock/screens/utils/CustomColors.dart';
+import 'package:greenland_stock/services/user_service.dart';
 
-class BusinessSettings extends StatelessWidget {
+class BusinessSettings extends StatefulWidget {
+  @override
+  _BusinessSettingsState createState() => _BusinessSettingsState();
+}
+
+class _BusinessSettingsState extends State<BusinessSettings> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -123,6 +129,8 @@ class BusinessSettings extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
           children: [
             SizedBox(width: 5),
             SvgPicture.asset(
@@ -132,36 +140,60 @@ class BusinessSettings extends StatelessWidget {
               allowDrawingOutsideViewBox: true,
             ),
             SizedBox(width: 15),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Flexible(
-                  child: Text(
-                    store.name,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      color: CustomColors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14.0,
-                    ),
-                  ),
-                ),
-                SizedBox(height: 5.0),
-                Row(
-                  children: [
-                    SizedBox(width: 5.0),
-                    Text(
-                      "Owner : ${store.ownedBy}",
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Flexible(
+                    child: Text(
+                      store.name,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         color: CustomColors.black,
-                        fontSize: 12.0,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14.0,
                       ),
                     ),
-                  ],
-                ),
-              ],
+                  ),
+                  SizedBox(height: 5.0),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Flexible(
+                        child: Text(
+                          "${store.ownedBy}",
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            color: CustomColors.black,
+                            fontSize: 12.0,
+                          ),
+                        ),
+                      ),
+                      InkWell(
+                        onTap: () async {
+                          await cachedLocalUser.updatePrimary(store.uuid);
+
+                          setState(() {});
+                        },
+                        child: Text(
+                          cachedLocalUser.primaryBusiness == store.uuid
+                              ? "PRIMARY"
+                              : "Set PRIMARY",
+                          style: TextStyle(
+                            color: cachedLocalUser.primaryBusiness == store.uuid
+                                ? Colors.green
+                                : CustomColors.blue,
+                            fontSize: 12.0,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ],
         ),

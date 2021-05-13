@@ -10,6 +10,8 @@ import 'package:greenland_stock/screens/home/edit_products.dart';
 import 'package:greenland_stock/screens/settings/SettingsHome.dart';
 import 'package:greenland_stock/screens/utils/AsyncWidgets.dart';
 import 'package:greenland_stock/screens/utils/CustomColors.dart';
+import 'package:greenland_stock/screens/utils/CustomSnackBar.dart';
+import 'package:greenland_stock/services/user_service.dart';
 
 class HomeScreen extends StatefulWidget {
   HomeScreen(this.index);
@@ -57,6 +59,15 @@ class _HomeScreenState extends State<HomeScreen> {
         floatingActionButton: _selectedIndex == 0
             ? FloatingActionButton(
                 onPressed: () {
+                  if (cachedLocalUser.primaryBusiness == null ||
+                      cachedLocalUser.primaryBusiness.isEmpty) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      CustomSnackBar.errorSnackBar(
+                          "No Primary Store Found! Please ADD a Store!", 3),
+                    );
+                    return;
+                  }
+
                   Navigator.pushNamed(context, addProductRoute);
                 },
                 child: Icon(Icons.add),

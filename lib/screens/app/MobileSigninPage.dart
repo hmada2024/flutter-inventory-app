@@ -40,6 +40,12 @@ class _MobileSignInPageState extends State<MobileSignInPage> {
     _lastNameController.text = "";
   }
 
+  @override
+  void deactivate() {
+    EasyLoading.dismiss();
+    super.deactivate();
+  }
+
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
@@ -376,6 +382,7 @@ class _MobileSignInPageState extends State<MobileSignInPage> {
 
   _codeAutoRetrievalTimeout(String verificationId) {
     _smsVerificationCode = verificationId;
+    EasyLoading.dismiss();
 
     Navigator.of(context).push(
       MaterialPageRoute(

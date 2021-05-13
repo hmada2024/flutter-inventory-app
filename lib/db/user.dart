@@ -1,5 +1,6 @@
 import 'package:greenland_stock/constants.dart';
 import 'package:greenland_stock/db/model.dart';
+import 'package:greenland_stock/services/user_service.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -38,6 +39,8 @@ class User extends Model {
   int deactivatedAt;
   @JsonKey(name: 'business')
   List<String> business;
+  @JsonKey(name: 'primary_business')
+  String primaryBusiness;
   @JsonKey(name: 'created_at')
   DateTime createdAt;
   @JsonKey(name: 'updated_at')
@@ -91,5 +94,12 @@ class User extends Model {
 
   Future updatePlatformDetails(Map<String, dynamic> data) async {
     this.update(data);
+  }
+
+  Future updatePrimary(String id) async {
+    cachedLocalUser.primaryBusiness = id;
+
+    DocumentReference docReef = getDocumentReference(cachedLocalUser.getID());
+    await docReef.update({'primary_business': cachedLocalUser.primaryBusiness});
   }
 }

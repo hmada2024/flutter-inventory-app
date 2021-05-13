@@ -19,6 +19,7 @@ User _$UserFromJson(Map<String, dynamic> json) {
     ..isActive = json['is_active'] as bool ?? true
     ..deactivatedAt = json['deactivated_at'] as int
     ..business = (json['business'] as List)?.map((e) => e as String)?.toList()
+    ..primaryBusiness = json['primary_business'] as String ?? ''
     ..createdAt = json['created_at'] == null
         ? null
         : DateTime.fromMillisecondsSinceEpoch(
@@ -48,6 +49,7 @@ Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
       'is_active': instance.isActive,
       'deactivated_at': instance.deactivatedAt,
       'business': instance.business,
+      'primary_business': instance.primaryBusiness,
       'created_at': instance.createdAt,
       'updated_at': instance.updatedAt,
     };

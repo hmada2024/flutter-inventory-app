@@ -50,6 +50,12 @@ class _PhoneAuthVerifyState extends State<PhoneAuthVerify> {
     errorController = StreamController<ErrorAnimationType>();
   }
 
+  @override
+  void deactivate() {
+    EasyLoading.dismiss();
+    super.deactivate();
+  }
+
   int resendSMSCount = 0;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -281,9 +287,6 @@ class _PhoneAuthVerifyState extends State<PhoneAuthVerify> {
         ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar.errorSnackBar(
             "Unable to Login, Something went wrong. Please try again Later!",
             2));
-        ScaffoldMessenger.of(context).showSnackBar(
-          CustomSnackBar.errorSnackBar(result['message'], 2),
-        );
       } else {
         prefs.setString("user_name", widget.name + " " + widget.lastName ?? "");
         prefs.setString(
@@ -318,7 +321,9 @@ class _PhoneAuthVerifyState extends State<PhoneAuthVerify> {
         "Verification Failed:" + authException.message.toString(), 2));
   }
 
-  _codeAutoRetrievalTimeout(String verificationId) {}
+  _codeAutoRetrievalTimeout(String verificationId) {
+    EasyLoading.dismiss();
+  }
 
   signIn() async {
     if (currentText.trim().length != 6) {
@@ -370,6 +375,7 @@ class _PhoneAuthVerifyState extends State<PhoneAuthVerify> {
           try {
             await _success();
           } catch (err) {
+            EasyLoading.dismiss();
             ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar.errorSnackBar(
                 "Unable to Login, Something went wrong. Please try again Later!",
                 2));

@@ -87,7 +87,7 @@ class _SettingsHomeState extends State<SettingsHome> {
                   Padding(
                     padding: EdgeInsets.all(10),
                     child: Text(
-                      "Business Settings",
+                      "Store Settings",
                       style: TextStyle(
                         fontSize: 16.0,
                         color: CustomColors.black,

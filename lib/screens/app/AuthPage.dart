@@ -40,6 +40,12 @@ class _AuthPageState extends State<AuthPage> {
   }
 
   @override
+  void deactivate() {
+    EasyLoading.dismiss();
+    super.deactivate();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
@@ -308,8 +314,6 @@ class _AuthPageState extends State<AuthPage> {
       EasyLoading.dismiss();
       ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar.errorSnackBar(
           "Unable to Login, Something went wrong. Please try again Later!", 2));
-      ScaffoldMessenger.of(context)
-          .showSnackBar(CustomSnackBar.errorSnackBar(result['message'], 2));
     } else {
       EasyLoading.dismiss();
       Navigator.pushNamedAndRemoveUntil(
