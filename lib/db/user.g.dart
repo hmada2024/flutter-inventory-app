@@ -48,8 +48,8 @@ Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
       'last_signed_in_at': instance.lastSignInTime,
       'is_active': instance.isActive,
       'deactivated_at': instance.deactivatedAt,
-      'business': instance.business,
-      'primary_business': instance.primaryBusiness,
+      'business': instance.business ?? [],
+      'primary_business': instance.primaryBusiness ?? '',
       'created_at': instance.createdAt,
       'updated_at': instance.updatedAt,
     };
