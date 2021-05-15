@@ -36,7 +36,7 @@ class _AuthPageState extends State<AuthPage> {
 
     _userID.text = widget.userID;
 
-    // biometric();
+    biometric();
   }
 
   @override
@@ -269,7 +269,8 @@ class _AuthPageState extends State<AuthPage> {
     final LocalAuthentication auth = LocalAuthentication();
     try {
       bool canCheckBiometrics = await auth.canCheckBiometrics;
-      if (canCheckBiometrics) {
+      bool isBiometricSupported = await auth.isDeviceSupported();
+      if (isBiometricSupported && canCheckBiometrics) {
         List<BiometricType> availableBiometrics;
         availableBiometrics = await auth.getAvailableBiometrics();
 
