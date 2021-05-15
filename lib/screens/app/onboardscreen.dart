@@ -84,7 +84,6 @@ class _OnboardScreenState extends State<OnboardScreen> {
                                 // controller.animateToPage(2,
                                 //     duration: Duration(milliseconds: 400),
                                 //     curve: Curves.linear);
-                                print("this is slideIndex: $slideIndex");
                                 controller.animateToPage(slideIndex - 1,
                                     duration: Duration(milliseconds: 500),
                                     curve: Curves.linear);
@@ -125,7 +124,6 @@ class _OnboardScreenState extends State<OnboardScreen> {
                       padding: const EdgeInsets.only(right: 10),
                       child: FlatButton(
                         onPressed: () {
-                          print("this is slideIndex: $slideIndex");
                           controller.animateToPage(slideIndex + 1,
                               duration: Duration(milliseconds: 500),
                               curve: Curves.linear);
@@ -252,7 +250,7 @@ class SliderModel {
 }
 
 List<SliderModel> getSlides() {
-  List<SliderModel> slides = new List<SliderModel>();
+  List<SliderModel> slides = [];
   SliderModel sliderModel = new SliderModel();
 
   //1
