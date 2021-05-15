@@ -148,6 +148,17 @@ class Products extends Model {
   Future<void> remove() async {
     try {
       DocumentReference docRef = getDocumentReference(this.uuid);
+
+      // remove sub-collection first
+      QuerySnapshot query = await docRef
+          .collection(is_prod_env ? 'product_tracker' : 'test_product_tracker')
+          .get();
+
+      for (var i = 0; i < query.docs.length; i++) {
+        await query.docs[i].reference.delete();
+      }
+
+      // reemove product data
       await docRef.delete();
     } catch (err) {
       throw err;

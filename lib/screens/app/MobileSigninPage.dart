@@ -296,7 +296,7 @@ class _MobileSignInPageState extends State<MobileSignInPage> {
       return;
     } else {
       EasyLoading.show(status: 'loading...');
-      this.number = _phoneNumberController.text;
+      this.number = _phoneNumberController.text.trim();
 
       var data = await user.User().getByID(countryCode.toString() + number);
       if (data != null) {
@@ -333,8 +333,8 @@ class _MobileSignInPageState extends State<MobileSignInPage> {
       dynamic result = await _authController.registerWithMobileNumber(
           int.parse(number),
           countryCode,
-          _passKeyController.text,
-          _nameController.text,
+          _passKeyController.text.trim(),
+          _nameController.text.trim(),
           _lastNameController.text,
           authResult.user.uid);
       if (!result['is_success']) {
@@ -390,8 +390,8 @@ class _MobileSignInPageState extends State<MobileSignInPage> {
             true,
             number,
             countryCode,
-            _passKeyController.text,
-            _nameController.text,
+            _passKeyController.text.trim(),
+            _nameController.text.trim(),
             _lastNameController.text,
             _smsVerificationCode,
             _forceResendingToken),

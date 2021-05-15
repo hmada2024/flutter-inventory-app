@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -126,7 +127,12 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                     ),
-                    !isSearchTriggered ? _getProducts() : _getSearchProducts(),
+                    (cachedLocalUser.primaryBusiness == null ||
+                            cachedLocalUser.primaryBusiness.isEmpty)
+                        ? _noProducts()
+                        : !isSearchTriggered
+                            ? _getProducts()
+                            : _getSearchProducts(),
                   ]),
                 )
               : SettingsHome(),
@@ -211,30 +217,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
         if (snapshot.hasData) {
           if (snapshot.data.docs.length == 0) {
-            child = Container(
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.sentiment_neutral,
-                      size: 40,
-                      color: CustomColors.black,
-                    ),
-                    SizedBox(height: 20),
-                    Text(
-                      "No Products Found!",
-                      style: TextStyle(
-                        color: CustomColors.alertRed,
-                        fontSize: 16,
-                      ),
-                    ),
-                    SizedBox(height: 20),
-                  ],
-                ),
-              ),
-            );
+            child = _noProducts();
           } else {
             child = Container(
               padding: EdgeInsets.all(8.0),
@@ -256,6 +239,33 @@ class _HomeScreenState extends State<HomeScreen> {
         }
         return child;
       },
+    );
+  }
+
+  Widget _noProducts() {
+    return Container(
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.sentiment_neutral,
+              size: 40,
+              color: CustomColors.black,
+            ),
+            SizedBox(height: 20),
+            Text(
+              "No Products Found!",
+              style: TextStyle(
+                color: CustomColors.alertRed,
+                fontSize: 16,
+              ),
+            ),
+            SizedBox(height: 20),
+          ],
+        ),
+      ),
     );
   }
 
@@ -340,8 +350,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                   Colors.redAccent),
                             ),
                             onPressed: () async {
-                              await _p.remove();
                               Navigator.pop(context);
+                              EasyLoading.show(status: 'Removing...');
+                              await _p.remove();
+                              EasyLoading.showSuccess(
+                                'Success',
+                                duration: Duration(seconds: 2),
+                              );
                             },
                             child: Text(
                               "Remove",
@@ -432,93 +447,80 @@ class StoreTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: null,
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12),
-          boxShadow: [
-            BoxShadow(
-              color: product.isLow
-                  ? Colors.redAccent.withOpacity(0.5)
-                  : Colors.white.withOpacity(0.5),
-              spreadRadius: 1,
-              blurRadius: 1,
-              offset: Offset(1, 1),
-            ),
-          ],
-        ),
-        child: ListTile(
-            title: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    SvgPicture.asset(
-                      'images/store.svg',
-                      height: 35.0,
-                      width: 35.0,
-                      allowDrawingOutsideViewBox: true,
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: product.isLow
+                ? Colors.redAccent.withOpacity(0.5)
+                : Colors.white.withOpacity(0.5),
+            spreadRadius: 1,
+            blurRadius: 1,
+            offset: Offset(1, 1),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SizedBox(width: 20),
+              SvgPicture.asset(
+                'images/store.svg',
+                height: 35.0,
+                width: 35.0,
+                allowDrawingOutsideViewBox: true,
+              ),
+              SizedBox(width: 20),
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Flexible(
+                      child: Text(product.name,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16.0,
+                          )),
                     ),
-                    SizedBox(width: 22),
-                    Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Column(
-                                children: [
-                                  SizedBox(
-                                    width: MediaQuery.of(context).size.width *
-                                        0.35,
-                                    child: Text(product.name,
-                                        maxLines: 2,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16.0,
-                                        )),
-                                  ),
-                                  SizedBox(height: 7),
-                                  SizedBox(
-                                    width: MediaQuery.of(context).size.width *
-                                        0.35,
-                                    child: Text(product.businessName,
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(
-                                          fontSize: 12.0,
-                                        )),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ]),
+                    SizedBox(height: 7),
+                    Flexible(
+                      child: Text(product.businessName,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: 12.0,
+                          )),
+                    ),
                   ],
                 ),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.20,
-                  child: Text(product.quantity.toString(),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        color: product.isLow ? Colors.white : Colors.grey,
-                        fontSize: 12.0,
-                      )),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 10.0, right: 20),
+                child: Text(
+                  product.quantity.toString(),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: product.isLow ? Colors.white : Colors.grey,
+                    fontSize: 12.0,
+                  ),
                 ),
-              ],
-            ),
-            SizedBox(height: 10),
-            Divider(
-              height: 1,
-            )
-          ],
-        )),
+              ),
+            ],
+          ),
+          SizedBox(height: 10),
+          Divider(
+            height: 1,
+          )
+        ],
       ),
     );
   }
