@@ -175,7 +175,7 @@ class _EditProductState extends State<EditProduct> {
             ? 1
             : change < 0
                 ? 2
-                : 0;
+                : 3;
         Products _p = widget.product;
 
         _p.name = this.pName;

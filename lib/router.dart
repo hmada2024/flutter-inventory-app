@@ -22,9 +22,6 @@ class Router {
         return MaterialPageRoute(builder: (_) => LoginPage());
       case registerRoute:
         return MaterialPageRoute(builder: (_) => MobileSignInPage());
-      // case '/otp':
-      // List<dynamic> args = settings.arguments;
-      //   return MaterialPageRoute(builder: (_) => PhoneAuthVerify());
       case onboardRoute:
         return MaterialPageRoute(builder: (_) => OnboardScreen());
       case homeRoute:

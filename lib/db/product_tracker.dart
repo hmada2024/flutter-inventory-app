@@ -17,6 +17,8 @@ class ProductTracker {
   double quantity;
   @JsonKey(name: 'avail_quantity', defaultValue: 1)
   double availQuantity;
+  @JsonKey(name: 'is_low', defaultValue: 1)
+  bool isLow;
   @JsonKey(name: 'type', defaultValue: 1)
   int type;
   @JsonKey(name: 'created_by', defaultValue: "")

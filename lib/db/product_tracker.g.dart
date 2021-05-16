@@ -7,6 +7,7 @@ ProductTracker _$ProductTrackerFromJson(Map<String, dynamic> json) {
     ..productID = json['product_id'] as String ?? ''
     ..quantity = (json['quantity'] as num)?.toDouble() ?? 0.00
     ..availQuantity = (json['avail_quantity'] as num)?.toDouble() ?? 0.00
+    ..isLow = json['is_low'] as bool ?? false
     ..type = json['type'] as int ?? 0
     ..createdBy = json['created_by'] as String ?? ''
     ..createdAt = json['created_at'] == null
@@ -26,12 +27,14 @@ int _getMillisecondsSinceEpoch(Timestamp ts) {
   return ts.millisecondsSinceEpoch;
 }
 
-Map<String, dynamic> _$ProductTrackerToJson(ProductTracker instance) => <String, dynamic>{
+Map<String, dynamic> _$ProductTrackerToJson(ProductTracker instance) =>
+    <String, dynamic>{
       'uuid': instance.uuid,
       'business_id': instance.businessID,
       'product_id': instance.productID,
       'quantity': instance.quantity ?? 0.00,
       'avail_quantity': instance.availQuantity ?? 0.00,
+      'is_low': instance.isLow,
       'type': instance.type ?? 0,
       'created_by': instance.createdBy,
       'created_at': instance.createdAt,

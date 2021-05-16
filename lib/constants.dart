@@ -16,6 +16,7 @@ const String homeRoute = '/home';
 const String addProductRoute = '/add-product';
 const String editProductRoute = '/edit-product';
 const String businessSettingsRoute = '/settings/business';
+const String userProfileRoute = '/settings/user';
 const String businessAddRoute = '/settings/business/add';
 
 // Env controller

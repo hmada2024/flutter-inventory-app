@@ -76,7 +76,7 @@ class Products extends Model {
       _pt.createdAt = DateTime.now();
       _pt.businessID = this.businessID;
       _pt.productID = this.uuid;
-      _pt.type = 1; // Product ADD
+      _pt.type = 0; // Product ADD
       _pt.uuid = _ptDocRef.id;
 
       bWrite.set(_ptDocRef, _pt.toJson());
@@ -113,7 +113,8 @@ class Products extends Model {
       _pt.createdAt = DateTime.now();
       _pt.businessID = this.businessID;
       _pt.productID = this.uuid;
-      _pt.type = type; // Product ADD - 1 / SUBSTRACT - 2 / No Change - 0
+      _pt.type = type; // Product NEW - 0 / ADD - 1 / SUBSTRACT - 2 / NO CHANGE - 3
+      _pt.isLow = this.isLow;
       _pt.uuid = _ptDocRef.id;
 
       bWrite.set(_ptDocRef, _pt.toJson());
