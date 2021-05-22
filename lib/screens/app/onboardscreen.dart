@@ -146,7 +146,7 @@ class _OnboardScreenState extends State<OnboardScreen> {
                   Navigator.pushNamed(context, loginRoute);
                 },
                 child: Container(
-                  height: Platform.isIOS ? 90 : 80,
+                  height: 80,
                   // color: Colors.blue,
                   alignment: Alignment.center,
                   child: Text(

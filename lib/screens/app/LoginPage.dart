@@ -8,6 +8,7 @@ import 'package:greenland_stock/db/user.dart' as user;
 import 'package:greenland_stock/screens/app/PhoneAuthVerify.dart';
 import 'package:greenland_stock/screens/utils/CustomSnackBar.dart';
 import 'package:greenland_stock/services/auth_service.dart';
+import 'package:greenland_stock/services/user_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // ENTER MOBILE NUMBER TO SEND OTP to LOGIN SCREEN
@@ -109,15 +110,16 @@ class _LoginPageState extends State<LoginPage> {
                                     ? 'Please enter the Mobile Number'
                                     : null,
                                 border: OutlineInputBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(12.0)),
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(12.0),
+                                  ),
                                 ),
                                 focusedBorder: OutlineInputBorder(
                                   borderSide: const BorderSide(
                                       color: Colors.grey, width: 2.0),
                                 ),
                                 labelText: 'Mobile Number',
-                                hintText: 'Enter registered Mobile Number'),
+                                hintText: 'Enter Registered Mobile Number'),
                           ),
                         ),
                         SizedBox(height: 20),
@@ -145,32 +147,35 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                         ),
                         Container(
-                            margin: EdgeInsets.only(top: 20, bottom: 5),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: new Container(
-                                      margin: const EdgeInsets.only(
-                                          left: 35.0, right: 10.0),
-                                      child: Divider(
-                                        color: Colors.black54,
-                                        height: 36,
-                                      )),
+                          margin: EdgeInsets.only(top: 20, bottom: 5),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: new Container(
+                                  margin: const EdgeInsets.only(
+                                      left: 35.0, right: 10.0),
+                                  child: Divider(
+                                    color: Colors.black54,
+                                    height: 36,
+                                  ),
                                 ),
-                                Text(
-                                  "OR",
+                              ),
+                              Text(
+                                "OR",
+                              ),
+                              Expanded(
+                                child: new Container(
+                                  margin: const EdgeInsets.only(
+                                      left: 10.0, right: 35.0),
+                                  child: Divider(
+                                    color: Colors.black54,
+                                    height: 36,
+                                  ),
                                 ),
-                                Expanded(
-                                  child: new Container(
-                                      margin: const EdgeInsets.only(
-                                          left: 10.0, right: 35.0),
-                                      child: Divider(
-                                        color: Colors.black54,
-                                        height: 36,
-                                      )),
-                                ),
-                              ],
-                            )),
+                              ),
+                            ],
+                          ),
+                        ),
                         InkWell(
                           child: Padding(
                             padding: const EdgeInsets.only(top: 10),
@@ -179,10 +184,11 @@ class _LoginPageState extends State<LoginPage> {
                                 text: 'Don\'t have an account? ',
                                 children: [
                                   TextSpan(
-                                      text: 'Register!',
-                                      style: TextStyle(
-                                        color: Colors.green,
-                                      )),
+                                    text: 'Register!',
+                                    style: TextStyle(
+                                      color: Colors.green,
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),
@@ -249,7 +255,7 @@ class _LoginPageState extends State<LoginPage> {
       ConfirmationResult confirmationResult =
           await _auth.signInWithPhoneNumber(phoneNumber);
 
-      // cachedLocalUser = _user;
+      cachedLocalUser = _user;
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
           builder: (BuildContext context) => PhoneAuthVerify(
