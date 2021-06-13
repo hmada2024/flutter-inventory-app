@@ -1,0 +1,14 @@
+{
+  "projects": {
+    "default": "fc-stock-app"
+  },
+  "targets": {
+    "fc-stock-app": {
+      "hosting": {
+        "my-stocker": [
+          "my-stocker"
+        ]
+      }
+    }
+  }
+}

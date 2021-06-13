@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 
 class UserFCM {
   final FirebaseMessaging _fcm = FirebaseMessaging.instance;
@@ -8,18 +9,18 @@ class UserFCM {
     try {
       String fcmToken = await _fcm.getToken();
 
-      // Save it to Firestore
-      if (fcmToken != null) {
-        var data = {
+      if (kIsWeb)
+        return {'token': fcmToken};
+      else if (fcmToken != null) {
+        return {
           'token': fcmToken,
           'created_at': DateTime.now(),
           'platform': Platform.operatingSystem,
           'version': Platform.operatingSystemVersion,
           'local_name': Platform.localeName
         };
-
-        return data;
       }
+      return null;
     } catch (err) {
       print(err.toString());
       return null;

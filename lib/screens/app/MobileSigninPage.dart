@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:greenland_stock/constants.dart';
@@ -312,17 +313,38 @@ class _MobileSignInPageState extends State<MobileSignInPage> {
   _verifyPhoneNumber() async {
     String phoneNumber = "+" + countryCode.toString() + number;
     final FirebaseAuth _auth = FirebaseAuth.instance;
-    await _auth.verifyPhoneNumber(
-        phoneNumber: phoneNumber,
-        timeout: Duration(seconds: 0),
-        verificationCompleted: (authCredential) =>
-            _verificationComplete(authCredential, context),
-        verificationFailed: (authException) =>
-            _verificationFailed(authException, context),
-        codeAutoRetrievalTimeout: (verificationId) =>
-            _codeAutoRetrievalTimeout(verificationId),
-        codeSent: (verificationId, [code]) =>
-            _smsCodeSent(verificationId, [code]));
+
+    if (kIsWeb) {
+      ConfirmationResult confirmationResult =
+          await _auth.signInWithPhoneNumber(phoneNumber);
+
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (BuildContext context) => PhoneAuthVerify(
+              true,
+              number,
+              countryCode,
+              _passKeyController.text.trim(),
+              _nameController.text.trim(),
+              _lastNameController.text,
+              _smsVerificationCode,
+              _forceResendingToken,
+              confirmResult: confirmationResult),
+        ),
+      );
+    } else {
+      await _auth.verifyPhoneNumber(
+          phoneNumber: phoneNumber,
+          timeout: Duration(seconds: 0),
+          verificationCompleted: (authCredential) =>
+              _verificationComplete(authCredential, context),
+          verificationFailed: (authException) =>
+              _verificationFailed(authException, context),
+          codeAutoRetrievalTimeout: (verificationId) =>
+              _codeAutoRetrievalTimeout(verificationId),
+          codeSent: (verificationId, [code]) =>
+              _smsCodeSent(verificationId, [code]));
+    }
   }
 
   _verificationComplete(

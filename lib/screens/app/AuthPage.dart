@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:greenland_stock/constants.dart';
@@ -36,7 +37,7 @@ class _AuthPageState extends State<AuthPage> {
 
     _userID.text = widget.userID;
 
-    biometric();
+    if (!kIsWeb) biometric();
   }
 
   @override

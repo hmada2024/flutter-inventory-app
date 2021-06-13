@@ -334,8 +334,35 @@ class _PhoneAuthVerifyState extends State<PhoneAuthVerify> {
       EasyLoading.show(status: 'loading...');
 
       if (kIsWeb) {
-        await widget.confirmResult.confirm(currentText.trim());
-        await _success();
+        UserCredential userCred =
+            await widget.confirmResult.confirm(currentText.trim());
+
+        if (widget.isRegister) {
+          dynamic result = await _authController.registerWithMobileNumber(
+              int.parse(widget.number),
+              widget.countryCode,
+              widget.passKey,
+              widget.name,
+              widget.lastName,
+              userCred.user.uid);
+          if (!result['is_success']) {
+            EasyLoading.dismiss();
+            ScaffoldMessenger.of(context).showSnackBar(
+                CustomSnackBar.errorSnackBar(result['message'], 5));
+          } else {
+            await _success();
+          }
+        } else {
+          dynamic result = await _authController.signInWithMobileNumber(
+              widget.countryCode.toString() + widget.number);
+          if (!result['is_success']) {
+            EasyLoading.dismiss();
+            ScaffoldMessenger.of(context).showSnackBar(
+                CustomSnackBar.errorSnackBar(result['message'], 5));
+          } else {
+            await _success();
+          }
+        }
       } else {
         verifyOTPAndLogin(currentText.trim());
       }
