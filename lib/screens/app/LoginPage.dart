@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -125,25 +126,33 @@ class _LoginPageState extends State<LoginPage> {
                         SizedBox(height: 20),
                         ClipRRect(
                           borderRadius: BorderRadius.circular(28),
-                          child: ButtonTheme(
-                            minWidth: 200.0,
-                            height: 57.0,
-                            child: RaisedButton(
-                              child: Text('Get OTP'),
-                              color: Colors.green,
-                              textColor: Colors.white,
-                              onPressed: () {
-                                setState(() {
-                                  _number.text.isEmpty
-                                      ? _validate = true
-                                      : _validate = false;
-                                });
-
-                                if (_validate == false) {
-                                  _submit();
-                                }
-                              },
+                          child: ElevatedButton(
+                            child: Text(
+                              'Get OTP',
+                              style: TextStyle(
+                                color: Colors.white,
+                              ),
                             ),
+                            style: ButtonStyle(
+                              minimumSize: MaterialStateProperty.all<Size>(
+                                  Size(200, 57)),
+                              padding:
+                                  MaterialStateProperty.all<EdgeInsetsGeometry>(
+                                      EdgeInsets.all(5.0)),
+                              backgroundColor: MaterialStateProperty.all<Color>(
+                                  Colors.green),
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _number.text.isEmpty
+                                    ? _validate = true
+                                    : _validate = false;
+                              });
+
+                              if (_validate == false) {
+                                _submit();
+                              }
+                            },
                           ),
                         ),
                         Container(
@@ -176,26 +185,24 @@ class _LoginPageState extends State<LoginPage> {
                             ],
                           ),
                         ),
-                        InkWell(
-                          child: Padding(
-                            padding: const EdgeInsets.only(top: 10),
-                            child: const Text.rich(
-                              TextSpan(
-                                text: 'Don\'t have an account? ',
-                                children: [
-                                  TextSpan(
-                                    text: 'Register!',
-                                    style: TextStyle(
-                                      color: Colors.green,
-                                    ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 10),
+                          child: Text.rich(
+                            TextSpan(
+                              text: 'Don\'t have an account? ',
+                              children: [
+                                TextSpan(
+                                  recognizer: new TapGestureRecognizer()
+                                    ..onTap = () => Navigator.pushNamed(
+                                        context, registerRoute),
+                                  text: 'Register!',
+                                  style: TextStyle(
+                                    color: Colors.green,
                                   ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
                           ),
-                          onTap: () {
-                            Navigator.pushNamed(context, registerRoute);
-                          },
                         ),
                       ],
                     ),

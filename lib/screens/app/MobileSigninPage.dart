@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:greenland_stock/constants.dart';
@@ -182,33 +183,41 @@ class _MobileSignInPageState extends State<MobileSignInPage> {
                           SizedBox(height: 20),
                           ClipRRect(
                             borderRadius: BorderRadius.circular(28),
-                            child: ButtonTheme(
-                              minWidth: 200.0,
-                              height: 57.0,
-                              child: RaisedButton(
-                                child: Text('Continue'),
-                                color: Colors.green,
-                                textColor: Colors.white,
-                                onPressed: () {
-                                  setState(() {
-                                    _passKeyController.text.isEmpty
-                                        ? _validate3 = true
-                                        : _validate3 = false;
-                                    _nameController.text.isEmpty
-                                        ? _validate = true
-                                        : _validate = false;
-                                    _phoneNumberController.text.isEmpty
-                                        ? _validate2 = true
-                                        : _validate2 = false;
-                                  });
-
-                                  if (_validate == false &&
-                                      _validate2 == false &&
-                                      _validate3 == false) {
-                                    startPhoneAuth();
-                                  }
-                                },
+                            child: ElevatedButton(
+                              child: Text(
+                                'Continue',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                ),
                               ),
+                              style: ButtonStyle(
+                                minimumSize: MaterialStateProperty.all<Size>(
+                                    Size(200, 57)),
+                                padding: MaterialStateProperty.all<
+                                    EdgeInsetsGeometry>(EdgeInsets.all(5.0)),
+                                backgroundColor:
+                                    MaterialStateProperty.all<Color>(
+                                        Colors.green),
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  _passKeyController.text.isEmpty
+                                      ? _validate3 = true
+                                      : _validate3 = false;
+                                  _nameController.text.isEmpty
+                                      ? _validate = true
+                                      : _validate = false;
+                                  _phoneNumberController.text.isEmpty
+                                      ? _validate2 = true
+                                      : _validate2 = false;
+                                });
+
+                                if (_validate == false &&
+                                    _validate2 == false &&
+                                    _validate3 == false) {
+                                  startPhoneAuth();
+                                }
+                              },
                             ),
                           ),
                           Container(
@@ -242,25 +251,23 @@ class _MobileSignInPageState extends State<MobileSignInPage> {
                                   //)
                                 ],
                               )),
-                          GestureDetector(
-                            child: Padding(
-                              padding: const EdgeInsets.only(top: 10),
-                              child: const Text.rich(
-                                TextSpan(
-                                  text: 'Already have an account? ',
-                                  children: [
-                                    TextSpan(
-                                        text: 'Sign in.',
-                                        style: TextStyle(
-                                          color: Colors.green,
-                                        )),
-                                  ],
-                                ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 10),
+                            child: Text.rich(
+                              TextSpan(
+                                text: 'Already have an account? ',
+                                children: [
+                                  TextSpan(
+                                      recognizer: new TapGestureRecognizer()
+                                        ..onTap = () => Navigator.pushNamed(
+                                            context, loginRoute),
+                                      text: 'Sign in.',
+                                      style: TextStyle(
+                                        color: Colors.green,
+                                      )),
+                                ],
                               ),
                             ),
-                            onTap: () {
-                              Navigator.pushNamed(context, loginRoute);
-                            },
                           ),
                           SizedBox(height: 20)
                         ],

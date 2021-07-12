@@ -51,6 +51,7 @@ dependencies:
   rxdart: ^0.26.0
   flutter_easyloading: ^3.0.0
   flutter_local_notifications: ^5.0.0+4
+  responsive_framework: ^0.1.4
 
 dev_dependencies:
   flutter_test:

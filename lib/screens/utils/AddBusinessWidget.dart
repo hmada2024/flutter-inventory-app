@@ -6,12 +6,16 @@ class AddBusinessWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: RaisedButton(
+      child: ElevatedButton(
         onPressed: () => Navigator.pushNamed(context, businessAddRoute),
-        textColor: Colors.white,
-        padding: const EdgeInsets.all(0.0),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8.0),
+        style: ButtonStyle(
+          padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+              EdgeInsets.all(0.0)),
+          shape: MaterialStateProperty.all<OutlinedBorder>(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8.0),
+            ),
+          ),
         ),
         child: Container(
           width: 175,

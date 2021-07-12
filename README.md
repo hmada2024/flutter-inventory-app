@@ -7,6 +7,7 @@ Flutter -Android application for inventory management. Implemented and distribut
 ## WEB
 
 - flutter config --enable-web
+- flutter config --no-enable-web
 - flutter devices
         To ensure that web is installed, list the devices available
 - flutter create .

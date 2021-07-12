@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -128,7 +129,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                     (cachedLocalUser.primaryBusiness == null ||
-                            cachedLocalUser.primaryBusiness.isEmpty)
+                            cachedLocalUser.primaryBusiness.isEmpty ||
+                            cachedLocalUser.business.isEmpty)
                         ? _noProducts()
                         : !isSearchTriggered
                             ? _getProducts()
@@ -140,53 +142,47 @@ class _HomeScreenState extends State<HomeScreen> {
         bottomNavigationBar: Container(
           height: 60,
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.50,
-                child: InkWell(
-                  onTap: () {
-                    _searchController.text = '';
-                    isSearchTriggered = false;
-                    _onItemTapped(0);
-                  },
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Icon(
-                        Icons.home,
-                        size: 25.0,
-                        color: Colors.green,
-                      ),
-                      Text(
-                        "Home",
-                      ),
-                    ],
-                  ),
+              InkWell(
+                onTap: () {
+                  _searchController.text = '';
+                  isSearchTriggered = false;
+                  _onItemTapped(0);
+                },
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Icon(
+                      Icons.home,
+                      size: 25.0,
+                      color: Colors.green,
+                    ),
+                    Text(
+                      "Home",
+                    ),
+                  ],
                 ),
               ),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.50,
-                child: InkWell(
-                  onTap: () {
-                    _onItemTapped(1);
-                  },
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Icon(
-                        Icons.settings,
-                        size: 22.0,
-                        color: Colors.green,
-                      ),
-                      SizedBox(
-                        height: 3,
-                      ),
-                      Text(
-                        "Settings",
-                      ),
-                    ],
-                  ),
+              InkWell(
+                onTap: () {
+                  _onItemTapped(1);
+                },
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Icon(
+                      Icons.settings,
+                      size: 22.0,
+                      color: Colors.green,
+                    ),
+                    SizedBox(
+                      height: 3,
+                    ),
+                    Text(
+                      "Settings",
+                    ),
+                  ],
                 ),
               ),
             ],
@@ -277,100 +273,105 @@ class _HomeScreenState extends State<HomeScreen> {
       itemBuilder: (BuildContext context, int index) {
         Products _p = Products.fromJson(docs[index].data());
 
-        return Slidable(
-          actionPane: SlidableDrawerActionPane(),
-          actionExtentRatio: 0.20,
-          child: StoreTile(product: _p),
-          actions: <Widget>[
-            IconSlideAction(
-              caption: 'Edit',
-              color: Colors.indigo,
-              icon: Icons.edit,
-              onTap: () {
-                showDialog(
-                    context: context,
-                    // barrierDismissible: true,
-                    builder: (BuildContext context) {
-                      return SingleChildScrollView(
-                        child: Column(
-                          children: [
-                            SizedBox(
-                              height: MediaQuery.of(context).size.height * 0.20,
-                            ),
-                            SingleChildScrollView(
-                              child: EditProduct(_p),
-                            ),
-                          ],
-                        ),
-                      );
-                    });
-              },
-            ),
-          ],
-          secondaryActions: <Widget>[
-            IconSlideAction(
-                caption: 'Remove',
-                color: Colors.red[400],
-                icon: Icons.delete_forever,
-                onTap: () {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      // return object of type Dialog
-                      return AlertDialog(
-                        shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(15.0))),
-                        title: Text(
-                          "${_p.name}",
-                          textAlign: TextAlign.center,
-                        ),
-                        content: Text(
-                          "Do you want to remove this product?",
-                          style: TextStyle(color: Colors.grey, height: 1.5),
-                        ),
-                        actions: <Widget>[
-                          // usually buttons at the bottom of the dialog
-                          TextButton(
-                            style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all<Color>(
-                                  Colors.green),
-                            ),
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                            child: Text(
-                              "Cancel",
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ),
-                          TextButton(
-                            style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all<Color>(
-                                  Colors.redAccent),
-                            ),
-                            onPressed: () async {
-                              Navigator.pop(context);
-                              EasyLoading.show(status: 'Removing...');
-                              await _p.remove();
-                              EasyLoading.showSuccess(
-                                'Success',
-                                duration: Duration(seconds: 2),
-                              );
-                            },
-                            child: Text(
-                              "Remove",
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ),
-                        ],
-                      );
-                    },
-                  );
-                }),
-          ],
-        );
+        return kIsWeb
+            ? StoreTile(product: _p)
+            : getSlidableProductWidget(_p, context);
       },
+    );
+  }
+
+  Slidable getSlidableProductWidget(Products _p, BuildContext context) {
+    return Slidable(
+      actionPane: SlidableDrawerActionPane(),
+      actionExtentRatio: 0.20,
+      child: StoreTile(product: _p),
+      actions: <Widget>[
+        IconSlideAction(
+          caption: 'Edit',
+          color: Colors.indigo,
+          icon: Icons.edit,
+          onTap: () {
+            showDialog(
+                context: context,
+                // barrierDismissible: true,
+                builder: (BuildContext context) {
+                  return SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.20,
+                        ),
+                        SingleChildScrollView(
+                          child: EditProduct(_p),
+                        ),
+                      ],
+                    ),
+                  );
+                });
+          },
+        ),
+      ],
+      secondaryActions: <Widget>[
+        IconSlideAction(
+            caption: 'Remove',
+            color: Colors.red[400],
+            icon: Icons.delete_forever,
+            onTap: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  // return object of type Dialog
+                  return AlertDialog(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(15.0))),
+                    title: Text(
+                      "${_p.name}",
+                      textAlign: TextAlign.center,
+                    ),
+                    content: Text(
+                      "Do you want to remove this product?",
+                      style: TextStyle(color: Colors.grey, height: 1.5),
+                    ),
+                    actions: <Widget>[
+                      // usually buttons at the bottom of the dialog
+                      TextButton(
+                        style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all<Color>(Colors.green),
+                        ),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: Text(
+                          "Cancel",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                      TextButton(
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                              Colors.redAccent),
+                        ),
+                        onPressed: () async {
+                          Navigator.pop(context);
+                          EasyLoading.show(status: 'Removing...');
+                          await _p.remove();
+                          EasyLoading.showSuccess(
+                            'Success',
+                            duration: Duration(seconds: 2),
+                          );
+                        },
+                        child: Text(
+                          "Remove",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ],
+                  );
+                },
+              );
+            }),
+      ],
     );
   }
 
@@ -462,6 +463,7 @@ class StoreTile extends StatelessWidget {
         ],
       ),
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -510,10 +512,145 @@ class StoreTile extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     color: product.isLow ? Colors.white : Colors.grey,
-                    fontSize: 12.0,
+                    fontSize: 14.0,
                   ),
                 ),
               ),
+              kIsWeb
+                  ? Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Divider(
+                          thickness: 1,
+                        ),
+                        Container(
+                          margin: EdgeInsets.symmetric(horizontal: 5),
+                          padding: EdgeInsets.symmetric(horizontal: 5),
+                          child: InkWell(
+                            onTap: () {
+                              showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return SingleChildScrollView(
+                                      child: Column(
+                                        children: [
+                                          SizedBox(
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .height *
+                                                0.20,
+                                          ),
+                                          SingleChildScrollView(
+                                            child: EditProduct(product),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  });
+                            },
+                            child: Column(
+                              children: [
+                                Icon(
+                                  Icons.edit,
+                                  color: Colors.blue,
+                                ),
+                                Text(
+                                  'Edit',
+                                  style: TextStyle(color: Colors.black),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                        Container(
+                          margin: EdgeInsets.symmetric(horizontal: 5),
+                          padding: EdgeInsets.symmetric(horizontal: 5),
+                          child: InkWell(
+                            onTap: () {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  // return object of type Dialog
+                                  return AlertDialog(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(15.0))),
+                                    title: Text(
+                                      "${product.name}",
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    content: Text(
+                                      "Do you want to remove this product?",
+                                      style: TextStyle(
+                                          color: Colors.grey, height: 1.5),
+                                    ),
+                                    actions: <Widget>[
+                                      // usually buttons at the bottom of the dialog
+                                      TextButton(
+                                        style: ButtonStyle(
+                                          padding: MaterialStateProperty.all<
+                                              EdgeInsetsGeometry>(
+                                            EdgeInsets.symmetric(horizontal: 5),
+                                          ),
+                                          backgroundColor:
+                                              MaterialStateProperty.all<Color>(
+                                                  Colors.green),
+                                        ),
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: Text(
+                                          "Cancel",
+                                          style: TextStyle(color: Colors.white),
+                                        ),
+                                      ),
+                                      TextButton(
+                                        style: ButtonStyle(
+                                          padding: MaterialStateProperty.all<
+                                              EdgeInsetsGeometry>(
+                                            EdgeInsets.symmetric(horizontal: 5),
+                                          ),
+                                          backgroundColor:
+                                              MaterialStateProperty.all<Color>(
+                                                  Colors.redAccent),
+                                        ),
+                                        onPressed: () async {
+                                          Navigator.pop(context);
+                                          EasyLoading.show(
+                                              status: 'Removing...');
+                                          await product.remove();
+                                          EasyLoading.showSuccess(
+                                            'Success',
+                                            duration: Duration(seconds: 2),
+                                          );
+                                        },
+                                        child: Text(
+                                          "Remove",
+                                          style: TextStyle(color: Colors.white),
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            },
+                            child: Column(
+                              children: [
+                                Icon(
+                                  Icons.delete_forever,
+                                  color: Colors.red,
+                                ),
+                                Text(
+                                  'Remove',
+                                  style: TextStyle(color: Colors.black),
+                                )
+                              ],
+                            ),
+                          ),
+                        )
+                      ],
+                    )
+                  : Container()
             ],
           ),
           SizedBox(height: 10),

@@ -10,8 +10,8 @@ import 'package:greenland_stock/router.dart' as r;
 import 'package:greenland_stock/screens/app/AuthPage.dart';
 import 'package:greenland_stock/screens/app/LoginPage.dart';
 import 'package:greenland_stock/screens/app/onboardscreen.dart';
+import 'package:responsive_framework/responsive_framework.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:splashscreen/splashscreen.dart';
 
 Future _fcmSetup() async {
   try {
@@ -107,18 +107,29 @@ Future<void> main() async {
     MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(primarySwatch: Colors.green),
-      home: SplashScreen(
-        seconds: 2,
-        navigateAfterSeconds: MyApp(isOpened, userID, userName, userImage),
-        loaderColor: Colors.white,
-        image: new Image.asset(
-          "images/GreenlandLogo.png",
-          height: 600.0,
-          width: 600.0,
-        ),
-        photoSize: 100.0,
-        backgroundColor: Colors.green,
-      ),
+      builder: (context, widget) => ResponsiveWrapper.builder(
+          MyApp(isOpened, userID, userName, userImage),
+          maxWidth: 1200,
+          minWidth: 480,
+          defaultScale: true,
+          breakpoints: [
+            ResponsiveBreakpoint.resize(480, name: MOBILE),
+            ResponsiveBreakpoint.autoScale(800, name: TABLET),
+            ResponsiveBreakpoint.resize(1000, name: DESKTOP),
+          ],
+          background: Container(color: Color(0xFFF5F5F5))),
+      // home: SplashScreen(
+      //   seconds: 2,
+      //   navigateAfterSeconds: MyApp(isOpened, userID, userName, userImage),
+      //   loaderColor: Colors.white,
+      //   image: new Image.asset(
+      //     "images/GreenlandLogo.png",
+      //     height: 600.0,
+      //     width: 600.0,
+      //   ),
+      //   photoSize: 100.0,
+      //   backgroundColor: Colors.green,
+      // ),
     ),
   );
 }

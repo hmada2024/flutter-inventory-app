@@ -120,24 +120,24 @@ class _PhoneAuthVerifyState extends State<PhoneAuthVerify> {
             SizedBox(
               height: 10,
             ),
-            Container(
-              color: Colors.green,
-              margin:
-                  const EdgeInsets.symmetric(vertical: 16.0, horizontal: 30),
-              child: ButtonTheme(
-                minWidth: 100.0,
-                height: 40.0,
-                child: TextButton(
-                  onPressed: signIn,
-                  child: Center(
-                      child: Text(
-                    "Verify",
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold),
-                  )),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(28),
+              child: ElevatedButton(
+                child: Text(
+                  'Verify',
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
                 ),
+                style: ButtonStyle(
+                  minimumSize: MaterialStateProperty.all<Size>(Size(200, 57)),
+                  padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+                      EdgeInsets.all(5.0)),
+                  elevation: MaterialStateProperty.all<double>(5),
+                  backgroundColor:
+                      MaterialStateProperty.all<Color>(Colors.green),
+                ),
+                onPressed: signIn,
               ),
             ),
           ],
@@ -175,44 +175,47 @@ class _PhoneAuthVerifyState extends State<PhoneAuthVerify> {
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 30),
-            child: PinCodeTextField(
-              appContext: context,
-              pastedTextStyle: TextStyle(
-                color: Colors.green.shade600,
-                fontWeight: FontWeight.bold,
+            child: Container(
+              width: 400,
+              child: PinCodeTextField(
+                appContext: context,
+                pastedTextStyle: TextStyle(
+                  color: Colors.green.shade600,
+                  fontWeight: FontWeight.bold,
+                ),
+                length: 6,
+                obscureText: false,
+                obscuringCharacter: '*',
+                animationType: AnimationType.fade,
+                pinTheme: PinTheme(
+                    shape: PinCodeFieldShape.box,
+                    borderRadius: BorderRadius.circular(10),
+                    fieldHeight: 45,
+                    fieldWidth: 40,
+                    activeFillColor: Colors.white,
+                    selectedFillColor: Colors.white,
+                    inactiveFillColor: Colors.grey[300]),
+                cursorColor: Colors.black,
+                animationDuration: Duration(milliseconds: 300),
+                errorAnimationController: errorController,
+                textStyle: TextStyle(fontSize: 17, height: 1.6),
+                enableActiveFill: true,
+                backgroundColor: Colors.transparent,
+                controller: textEditingController,
+                keyboardType: TextInputType.number,
+                boxShadows: [
+                  BoxShadow(
+                    offset: Offset(0, 1),
+                    color: Colors.black12,
+                    blurRadius: 10,
+                  )
+                ],
+                onChanged: (value) {
+                  setState(() {
+                    currentText = value;
+                  });
+                },
               ),
-              length: 6,
-              obscureText: false,
-              obscuringCharacter: '*',
-              animationType: AnimationType.fade,
-              pinTheme: PinTheme(
-                  shape: PinCodeFieldShape.box,
-                  borderRadius: BorderRadius.circular(10),
-                  fieldHeight: 45,
-                  fieldWidth: 40,
-                  activeFillColor: Colors.white,
-                  selectedFillColor: Colors.white,
-                  inactiveFillColor: Colors.grey[300]),
-              cursorColor: Colors.black,
-              animationDuration: Duration(milliseconds: 300),
-              errorAnimationController: errorController,
-              textStyle: TextStyle(fontSize: 17, height: 1.6),
-              enableActiveFill: true,
-              backgroundColor: Colors.transparent,
-              controller: textEditingController,
-              keyboardType: TextInputType.number,
-              boxShadows: [
-                BoxShadow(
-                  offset: Offset(0, 1),
-                  color: Colors.black12,
-                  blurRadius: 10,
-                )
-              ],
-              onChanged: (value) {
-                setState(() {
-                  currentText = value;
-                });
-              },
             ),
           ),
           Row(

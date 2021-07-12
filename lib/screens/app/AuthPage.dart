@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:greenland_stock/constants.dart';
@@ -160,40 +161,49 @@ class _AuthPageState extends State<AuthPage> {
                           padding: const EdgeInsets.only(right: 8, bottom: 8),
                           child: Container(
                             alignment: Alignment(1.0, 0.0),
-                            child: GestureDetector(
-                              child: Text(
-                                "Forget Password?",
+                            child: Text.rich(
+                              TextSpan(
+                                recognizer: new TapGestureRecognizer()
+                                  ..onTap = () =>
+                                      Navigator.pushNamed(context, loginRoute),
+                                text: "Forget Password?",
                                 style: TextStyle(color: CustomColors.alertRed),
                               ),
-                              onTap: () {
-                                Navigator.pushNamed(context, loginRoute);
-                              },
                             ),
                           ),
                         ),
                         SizedBox(height: 5),
                         ClipRRect(
                           borderRadius: BorderRadius.circular(28),
-                          child: ButtonTheme(
-                            minWidth: 200.0,
-                            height: 57.0,
-                            child: RaisedButton(
-                              child: Text('Continue'),
-                              color: Colors.green,
-                              textColor: Colors.white,
-                              onPressed: () async {
-                                setState(() {
-                                  _userID.text.isEmpty
-                                      ? _validate = true
-                                      : _validate = false;
-                                  _passwd.text.isEmpty
-                                      ? _validate2 = true
-                                      : _validate2 = false;
-                                });
-
-                                _submit(_userID.text);
-                              },
+                          child: ElevatedButton(
+                            child: Text(
+                              'Continue',
+                              style: TextStyle(
+                                color: Colors.white,
+                              ),
                             ),
+                            style: ButtonStyle(
+                              minimumSize: MaterialStateProperty.all<Size>(
+                                  Size(200, 57)),
+                              padding:
+                                  MaterialStateProperty.all<EdgeInsetsGeometry>(
+                                      EdgeInsets.all(5.0)),
+                              elevation: MaterialStateProperty.all<double>(5),
+                              backgroundColor: MaterialStateProperty.all<Color>(
+                                  Colors.green),
+                            ),
+                            onPressed: () async {
+                              setState(() {
+                                _userID.text.isEmpty
+                                    ? _validate = true
+                                    : _validate = false;
+                                _passwd.text.isEmpty
+                                    ? _validate2 = true
+                                    : _validate2 = false;
+                              });
+
+                              _submit(_userID.text);
+                            },
                           ),
                         ),
                         Container(
@@ -227,25 +237,24 @@ class _AuthPageState extends State<AuthPage> {
                                 //)
                               ],
                             )),
-                        GestureDetector(
-                          child: Padding(
-                            padding: const EdgeInsets.only(top: 10),
-                            child: const Text.rich(
-                              TextSpan(
-                                text: 'Don\'t have an account? ',
-                                children: [
-                                  TextSpan(
-                                      text: ' Register!',
-                                      style: TextStyle(
-                                        color: Colors.green,
-                                      )),
-                                ],
-                              ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 10),
+                          child: Text.rich(
+                            TextSpan(
+                              text: 'Don\'t have an account? ',
+                              children: [
+                                TextSpan(
+                                  recognizer: new TapGestureRecognizer()
+                                    ..onTap = () => Navigator.pushNamed(
+                                        context, registerRoute),
+                                  text: ' Register!',
+                                  style: TextStyle(
+                                    color: Colors.green,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                          onTap: () {
-                            Navigator.pushNamed(context, registerRoute);
-                          },
                         ),
                         SizedBox(height: 20)
                       ],

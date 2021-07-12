@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_svg/svg.dart';
@@ -44,28 +45,30 @@ class _BusinessSettingsState extends State<BusinessSettings> {
               itemBuilder: (BuildContext context, int index) {
                 Business store =
                     Business.fromJson(snapshot.data.docs[index].data());
-                return Slidable(
-                  actionPane: SlidableDrawerActionPane(),
-                  actionExtentRatio: 0.20,
-                  child: Container(
-                    height: 100,
-                    child: _getBusinessBody(store),
-                  ),
-                  actions: <Widget>[
-                    IconSlideAction(
-                        caption: 'Edit',
-                        color: Colors.blue,
-                        icon: Icons.edit,
-                        onTap: () {}),
-                  ],
-                  secondaryActions: <Widget>[
-                    IconSlideAction(
-                        caption: 'Remove',
-                        color: Colors.red,
-                        icon: Icons.delete_forever,
-                        onTap: () {}),
-                  ],
-                );
+                return kIsWeb
+                    ? _getBusinessBody(store)
+                    : Slidable(
+                        actionPane: SlidableDrawerActionPane(),
+                        actionExtentRatio: 0.20,
+                        child: Container(
+                          height: 100,
+                          child: _getBusinessBody(store),
+                        ),
+                        actions: <Widget>[
+                          IconSlideAction(
+                              caption: 'Edit',
+                              color: Colors.blue,
+                              icon: Icons.edit,
+                              onTap: () {}),
+                        ],
+                        secondaryActions: <Widget>[
+                          IconSlideAction(
+                              caption: 'Remove',
+                              color: Colors.red,
+                              icon: Icons.delete_forever,
+                              onTap: () {}),
+                        ],
+                      );
               },
             );
           } else {
@@ -144,6 +147,7 @@ class _BusinessSettingsState extends State<BusinessSettings> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   Flexible(
                     child: Text(
@@ -158,43 +162,85 @@ class _BusinessSettingsState extends State<BusinessSettings> {
                     ),
                   ),
                   SizedBox(height: 5.0),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Flexible(
-                        child: Text(
-                          "${store.ownedBy}",
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            color: CustomColors.black,
-                            fontSize: 12.0,
-                          ),
-                        ),
+                  Flexible(
+                    child: Text(
+                      "${store.ownedBy}",
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: CustomColors.black,
+                        fontSize: 12.0,
                       ),
-                      InkWell(
-                        onTap: () async {
-                          await cachedLocalUser.updatePrimary(store.uuid);
-
-                          setState(() {});
-                        },
-                        child: Text(
-                          cachedLocalUser.primaryBusiness == store.uuid
-                              ? "Primary Store"
-                              : "Set As Primary",
-                          style: TextStyle(
-                            color: cachedLocalUser.primaryBusiness == store.uuid
-                                ? Colors.green
-                                : CustomColors.blue,
-                            fontSize: 12.0,
-                          ),
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
                 ],
               ),
             ),
+            Padding(
+              padding: const EdgeInsets.only(left: 10.0, right: 20),
+              child: InkWell(
+                onTap: () async {
+                  await cachedLocalUser.updatePrimary(store.uuid);
+
+                  setState(() {});
+                },
+                child: Text(
+                  cachedLocalUser.primaryBusiness == store.uuid
+                      ? "Primary Store"
+                      : "Set As Primary",
+                  style: TextStyle(
+                    color: cachedLocalUser.primaryBusiness == store.uuid
+                        ? Colors.green
+                        : CustomColors.blue,
+                    fontSize: 12.0,
+                  ),
+                ),
+              ),
+            ),
+            kIsWeb
+                ? Row(
+                    children: [
+                      Container(
+                        margin: EdgeInsets.symmetric(horizontal: 5),
+                        padding: EdgeInsets.symmetric(horizontal: 5),
+                        child: InkWell(
+                          onTap: () {},
+                          child: Column(
+                            children: [
+                              Icon(
+                                Icons.edit,
+                                color: Colors.blue,
+                              ),
+                              Text(
+                                'Edit',
+                                style: TextStyle(color: Colors.black),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                      Container(
+                        margin: EdgeInsets.symmetric(horizontal: 5),
+                        padding: EdgeInsets.symmetric(horizontal: 5),
+                        child: InkWell(
+                          onTap: () {},
+                          child: Column(
+                            children: [
+                              Icon(
+                                Icons.delete_forever,
+                                color: Colors.red,
+                              ),
+                              Text(
+                                'Remove',
+                                style: TextStyle(color: Colors.black),
+                              )
+                            ],
+                          ),
+                        ),
+                      )
+                    ],
+                  )
+                : Container()
           ],
         ),
       ),

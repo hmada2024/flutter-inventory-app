@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -79,7 +78,7 @@ class _OnboardScreenState extends State<OnboardScreen> {
                     slideIndex != 0
                         ? Padding(
                             padding: const EdgeInsets.only(left: 10),
-                            child: FlatButton(
+                            child: TextButton(
                               onPressed: () {
                                 // controller.animateToPage(2,
                                 //     duration: Duration(milliseconds: 400),
@@ -97,7 +96,7 @@ class _OnboardScreenState extends State<OnboardScreen> {
                           )
                         : Padding(
                             padding: const EdgeInsets.only(left: 10),
-                            child: FlatButton(
+                            child: TextButton(
                               onPressed: () {
                                 controller.animateToPage(2,
                                     duration: Duration(milliseconds: 400),
@@ -122,7 +121,7 @@ class _OnboardScreenState extends State<OnboardScreen> {
                     ),
                     Padding(
                       padding: const EdgeInsets.only(right: 10),
-                      child: FlatButton(
+                      child: TextButton(
                         onPressed: () {
                           controller.animateToPage(slideIndex + 1,
                               duration: Duration(milliseconds: 500),

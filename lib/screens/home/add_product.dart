@@ -202,11 +202,30 @@ class _AddProductState extends State<AddProduct> {
                               ),
                             ),
                             SizedBox(height: 20),
-                            ElevatedButton(
-                              child: Text('Add Product'),
-                              onPressed: () async {
-                                await _submit();
-                              },
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(28),
+                              child: ElevatedButton(
+                                style: ButtonStyle(
+                                  minimumSize: MaterialStateProperty.all<Size>(
+                                      Size(200, 57)),
+                                  padding: MaterialStateProperty.all<
+                                      EdgeInsetsGeometry>(EdgeInsets.all(5.0)),
+                                  elevation:
+                                      MaterialStateProperty.all<double>(5),
+                                  backgroundColor:
+                                      MaterialStateProperty.all<Color>(
+                                          Colors.green),
+                                ),
+                                child: Text(
+                                  'Add Product',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                onPressed: () async {
+                                  await _submit();
+                                },
+                              ),
                             ),
                             SizedBox(height: 20)
                           ],
